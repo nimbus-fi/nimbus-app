@@ -4,6 +4,7 @@ import { useAccount } from 'wagmi';
 import { COMMUNITY_UNION_ADDRESS } from '@/lib/contract';
 import COMMUNITY_UNION from '@/lib/abi/CommunityUnion.json';
 import { ethers } from 'ethers';
+import TransactionTable from '@/components/TransactionTable';
 
 interface Transaction {
     transactionHash: string;
@@ -33,7 +34,7 @@ const Dashboard = () => {
     const [lendPoints, setLendPoints] = useState("0");
     const [tokenTransaction, setTokenTransaction] = useState("2");
 
-    const [transactions, setTransactions] = useState<TransactionTableProps>();
+    const [transactions, setTransactions] = useState<Transaction[] | undefined>(undefined);
     const [loading, setLoading] = useState(false);
 
 
@@ -94,11 +95,6 @@ const Dashboard = () => {
         fetchEvents();
     }, [isConnected, address]);
 
-    const convertToNibi = (value: string): string => {
-        const valueAsNumber = parseFloat(value);
-        const dividedValue = valueAsNumber / Math.pow(10, 6);
-        return dividedValue.toString();
-    }
 
     const calculateLendPoints = () => {
         const lendPoint = (parseFloat(lend) + parseFloat(borrow)) * 2;
@@ -205,50 +201,8 @@ const Dashboard = () => {
                         : (
                             <div className="w-full">
                                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                                    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                                        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                                <tr>
-                                                    <th scope="col" className="px-6 py-3">Transaction Hash</th>
-                                                    <th scope="col" className="px-6 py-3">Type</th>
-                                                    <th scope="col" className="px-6 py-3">Data</th>
-                                                    <th scope="col" className="px-6 py-3">Block Number</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {transactions?.map((tx, index) => (
-                                                    <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                            {tx?.transactionHash.toString()}
-                                                        </th>
-                                                        <td className="px-6 py-4">
-                                                            {tx.type}
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            {tx.type === "OwnershipTransferred" && (
-                                                                <>
-                                                                    Previous Owner: {tx.previousOwner.substring(0, 10)}...<br />
-                                                                    New Owner: {tx.newOwner.substring(0, 10)}...
-                                                                </>
-                                                            )}
-                                                            {tx.type === "MemberJoined" && (
-                                                                <>Member: {tx.member.substring(0, 10)}...</>
-                                                            )}
-                                                            {tx.type === "Deposited" && (
-                                                                <>
-                                                                    Member: {tx.member.substring(0, 10)}...<br />
-                                                                    Amount: {formatAmount(tx.amount)} {tx.isNimbus ? "Nimbus" : "Collateral"}
-                                                                </>
-                                                            )}
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            {tx.blockNumber}
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    {/* @ts-ignore */}
+                                    <TransactionTable transactions={transactions} />
                                 </div>
 
                             </div>

@@ -113,7 +113,6 @@ export default function Funding() {
     };
 
     const withdraw = async (amount: string, isNimbus: boolean) => {
-        event.preventDefault();
 
         if (!window.ethereum) {
             toast.error("Please install MetaMask!");

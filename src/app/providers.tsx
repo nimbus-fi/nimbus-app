@@ -19,9 +19,7 @@ import {
 import 'dotenv/config'
 
 import {
-    mainnet,
     sepolia,
-    polygonMumbai,
 } from 'wagmi/chains';
 // import { publicProvider } from 'wagmi/providers/public';
 // import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -46,7 +44,7 @@ const ubit = {
 const config = getDefaultConfig({
     appName: 'My RainbowKit App',
     projectId: 'YOUR_PROJECT_ID',
-    chains: [ubit, sepolia],
+    chains: [ubit],
     ssr: true, // If your dApp uses server side rendering (SSR)
 });
 

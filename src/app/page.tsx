@@ -18,7 +18,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white p-6 rounded-xl shadow-xl ">
                 <Link
-                  href="/lend">
+                  href="/fund?state=deposit">
                   <div className="bg-white p-6 rounded-xl ">
                     <h2 className="text-2xl font-semibold mb-4">For Lenders</h2>
                     <p>Earn competitive interest rates by providing liquidity to the community.</p>
@@ -27,7 +27,7 @@ export default function Home() {
               </div>
               <div className="bg-white p-6 rounded-xl shadow-xl ">
                 <Link
-                  href="/borrow">
+                  href="/fund?state=borrow">
                   <div className="bg-white p-6 rounded-xl ">
                     <h2 className="text-2xl font-semibold mb-4">For Borrowers</h2>
                     <p>Access loans backed by cryptocurrency assets at favorable rates.</p>
