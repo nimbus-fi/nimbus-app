@@ -2,11 +2,12 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
 import { useAccount } from 'wagmi';
 import { ethers } from 'ethers';
-import { COMMUNITY_UNION_ADDRESS, LENDING_POOL_ADDRESS, NIMBUS_TOKEN_ADDRESS, COLLATERAL_MANAGER_ADDRESS, COLLATERAL_TOKEN_ADDRESS } from '@/lib/contract';
+import { NIMBUS_TOKEN_ADDRESS, COLLATERAL_MANAGER_ADDRESS, COLLATERAL_TOKEN_ADDRESS, NIMBUS_FINANCE } from '@/lib/contract';
 import COMMUNITY_UNION from '@/lib/abi/CommunityUnion.json';
 import LENDING_POOL from '@/lib/abi/LendingPool.json';
+import NIMBUS_FINANCE_JSON from '@/lib/abi/NimbusFinance.json';
 import ERC20 from '@/lib/abi/MyToken.json';
-import { getCommunityUnionContract, getLendingPoolContract } from '@/lib/contract';
+import { getCommunityUnionContract, getNimbusFinanceContract } from '@/lib/contract';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,7 +17,7 @@ export default function Funding() {
 
     const [open, setOpen] = useState<string>("deposit");
     const [amount, setAmount] = useState<string>("");
-    const [asset, setAsset] = useState<string>("NIBS");
+    const [asset, setAsset] = useState<string>("NIBS"); // default asset
     const [exchange, setExchange] = useState<string>("1");
     const [isNimbusToken, setIsNimbusToken] = useState<boolean>(true);
 
@@ -44,14 +45,14 @@ export default function Funding() {
                 return NIMBUS_TOKEN_ADDRESS;
             case "COLLATERAL":
                 setIsNimbusToken(false);
-                return COLLATERAL_MANAGER_ADDRESS;
+                return COLLATERAL_TOKEN_ADDRESS;
             // Add other token addresses as needed
             default:
                 return NIMBUS_TOKEN_ADDRESS;
         }
     };
 
-    const deposit = async (event: React.FormEvent) => {
+    const deposit = async (event: React.FormEvent, asset: string) => {
         event.preventDefault();
         if (!isConnected || !provider) {
             toast.error("Please connect your wallet");
@@ -59,31 +60,39 @@ export default function Funding() {
         }
 
         try {
-            const contract = getCommunityUnionContract(provider);
+            const contract = getNimbusFinanceContract(provider);
+            const amountWei = ethers.utils.parseEther(amount);
 
-            // Get token sign
-            const tokenAddress = isNimbusToken ? NIMBUS_TOKEN_ADDRESS : COLLATERAL_TOKEN_ADDRESS;
-            const tokenContract = new ethers.Contract(
-                tokenAddress, ERC20.abi, provider.getSigner()
-            );
-            const amountWei = ethers.utils.parseUnits(amount, 18);
-            console.log("deposit amount:", amountWei.toString());
+            let tx;
+            if (asset === "USC") {
+                // Deposit Ubit tokens
+                tx = await contract.depositEther({ value: amountWei });
+            } else {
+                // Deposit Nimbus tokens
+                const tokenContract = new ethers.Contract(
+                    NIMBUS_TOKEN_ADDRESS,
+                    ['function approve(address spender, uint256 amount) returns (bool)'],
+                    provider.getSigner()
+                );
 
-            // Approve the contract to spend tokens
-            const approveTx = await tokenContract.approve(contract.address, amountWei);
-            await approveTx.wait();
+                // Approve the contract to spend tokens
+                const approveTx = await tokenContract.approve(contract.address, amountWei);
+                await approveTx.wait();
 
-            // Deposit tokens
-            const depositTx = await contract.deposit(amountWei, isNimbusToken);
-            await depositTx.wait();
+                // Deposit Nimbus tokens
+                tx = await contract.depositNimbus(amountWei);
+            }
 
-            toast.success("Deposit successful");
+            await tx.wait();
+
+            toast.success(`${asset} deposit successful`);
             setAmount("");
         } catch (error) {
             console.error("Error depositing:", error);
             toast.error("Error depositing. Please try again.");
         }
     };
+
 
     const borrow = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -94,49 +103,104 @@ export default function Funding() {
         }
 
         try {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const contract = getCommunityUnionContract(provider);
+            const contract = getNimbusFinanceContract(provider);
+            const amountWei = ethers.utils.parseEther(amount);
 
-            const amountWei = ethers.utils.parseUnits(amount, 18);
-
-            // Borrow tokens
-            const borrowTx = await contract.borrow(amountWei, { gasLimit: 100000 });
+            // Borrow Nimbus tokens
+            const borrowTx = await contract.borrow(amountWei);
             toast.info("Borrowing in progress...");
 
             await borrowTx.wait();
 
             toast.success("Borrow successful");
+            setAmount("");
         } catch (error) {
             console.error("Error borrowing:", error);
             toast.error("Error borrowing. Please try again.");
         }
     };
 
-    const withdraw = async (amount: string, isNimbus: boolean) => {
-
-        if (!window.ethereum) {
-            toast.error("Please install MetaMask!");
+    const getUserInfo = async (address: string) => {
+        if (!provider) {
+            toast.error("Please connect your wallet");
             return;
         }
 
         try {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const contract = getCommunityUnionContract(provider);
+            const contract = getNimbusFinanceContract(provider);
+            const [etherBalance, nimbusBalance, borrowedAmount] = await contract.getUserInfo(address);
 
-            const amountWei = ethers.utils.parseUnits(amount, 18);
+            return {
+                etherBalance: ethers.utils.formatEther(etherBalance),
+                nimbusBalance: ethers.utils.formatEther(nimbusBalance),
+                borrowedAmount: ethers.utils.formatEther(borrowedAmount)
+            };
+        } catch (error) {
+            console.error("Error getting user info:", error);
+            toast.error("Error fetching user information");
+        }
+    };
 
-            // Withdraw tokens
-            const withdrawTx = await contract.withdraw(amountWei, isNimbus);
+
+    const withdraw = async (amount: string,) => {
+        if (!isConnected || !provider) {
+            toast.error("Please connect your wallet");
+            return;
+        }
+
+        try {
+            const contract = getNimbusFinanceContract(provider);
+            const amountWei = ethers.utils.parseEther(amount);
+
+            const withdrawTx = await contract.withdraw(amountWei);
             toast.info("Withdrawal in progress...");
 
             await withdrawTx.wait();
 
-            toast.success("Withdrawal successful");
+            toast.success(`${asset} withdrawal successful`);
         } catch (error) {
             console.error("Error withdrawing:", error);
             toast.error("Error withdrawing. Please try again.");
         }
     };
+
+
+    const repay = async (amount: string) => {
+        if (!isConnected || !provider) {
+            toast.error("Please connect your wallet");
+            return;
+        }
+
+        try {
+            const contract = getNimbusFinanceContract(provider);
+            const amountWei = ethers.utils.parseEther(amount);
+
+            // Approve Nimbus tokens first
+            const tokenContract = new ethers.Contract(
+                NIMBUS_TOKEN_ADDRESS,
+                ['function approve(address spender, uint256 amount) returns (bool)'],
+                provider.getSigner()
+            );
+            const approveTx = await tokenContract.approve(contract.address, amountWei);
+            await approveTx.wait();
+
+            // Repay borrowed amount
+            const repayTx = await contract.repay(amountWei);
+            toast.info("Repayment in progress...");
+
+            await repayTx.wait();
+
+            toast.success("Repayment successful");
+        } catch (error) {
+            console.error("Error repaying:", error);
+            toast.error("Error repaying. Please try again.");
+        }
+    };
+
+    const handleSubmit = (event: React.FormEvent) => {
+        deposit(event, asset);
+    };
+
 
     return (
         <main className="flex flex-row justify-center align-middle py-5 ">
@@ -171,7 +235,7 @@ export default function Funding() {
                     {/* Deposit option */}
                     {open === "deposit" && (
                         <div>
-                            <form onSubmit={deposit} className="w-full max-w-lg">
+                            <form onSubmit={handleSubmit} className="w-full max-w-lg">
                                 <div className="my-4">
                                     <label className="form-control w-full">
                                         <div className="label">
@@ -182,9 +246,9 @@ export default function Funding() {
                                             value={asset}
                                             onChange={(e) => setAsset(e.target.value)}
                                         >
+                                            <option value="USC">USC ( Native Chain Token)</option>
                                             <option value="NIBS">NIBS (Nimbus Token)</option>
                                             <option value="COLLATERAL">wNIBS (Collateral Token)</option>
-                                            <option value="USC">USC (soon)</option>
                                             <option value="ETH">ETH (soon)</option>
                                             <option value="USDC">USDC (soon)</option>
                                         </select>
@@ -211,7 +275,7 @@ export default function Funding() {
                                     <div className="my-2">
                                         <div className="flex items-center justify-between">
                                             <div className="">Exchange Rate</div>
-                                            <div>1 {asset} = {exchange} w{asset}</div>
+                                            <div>1 {asset} = {exchange} wNIBS</div>
                                         </div>
                                     </div>
                                 </div>
@@ -240,9 +304,9 @@ export default function Funding() {
                                             value={asset}
                                             onChange={(e) => setAsset(e.target.value)}
                                         >
+                                            <option value="USC">USC ( Native Chain Token)</option>
                                             <option value="NIBS">NIBS (Nimbus Token)</option>
                                             <option value="COLLATERAL">wNIBS (Collateral Token)</option>
-                                            <option value="USC">USC (soon)</option>
                                             <option value="ETH">ETH (soon)</option>
                                             <option value="USDC">USDC (soon)</option>
                                         </select>
