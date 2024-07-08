@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Router, { useRouter } from "next/navigation";
 import React, { useState } from "react";
-// import AppLogo from '../assets/app-logo.png'
+import Logo from "../../../public/assets/nimbus-bg.png"
 import { AiOutlineSearch } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
@@ -11,7 +11,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 
 const style = {
-	wrapper: `bg-black w-screen px-[1.2rem] py-[0.8rem] flex `,
+	wrapper: `flex flex-wrap items-center justify-between bg-black w-screen px-[1.2rem] py-[0.8rem] `,
 	logoContainer: `flex items-center cursor-pointer`,
 	logoText: ` ml-[0.8rem] text-white font-semibold text-2xl`,
 	searchBar: `flex flex-1 mx-[0.8rem] w-max-[520px] items-center bg-[#363840] rounded-[0.8rem] hover:bg-[#4c505c]`,
@@ -24,76 +24,70 @@ const style = {
 
 export default function Navbar() {
 	const router = useRouter();
-	const [searchQuery, setSearchQuery] = useState("");
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const toggleMenu = () => {
+		setIsMenuOpen(!isMenuOpen);
+	};
 
 	return (
 		<div className={style.wrapper}>
 			<Link href="/">
 				<div className={style.logoContainer}>
-					{/* <Image src={mantleSeaLogo} height={80} width={200} alt="mantle logo" /> */}
-					<div className="text-[32px] text-white font-serif"
+					<Image src={Logo} height={40} width={70} alt="mantle logo" />
+					<div className="text-[32px] text-white font-serif pl-5"
 					>
-						MyLogo
+						FraxCare
 					</div>
 					<div className={style.logoText}></div>
 				</div>
 			</Link>
+			<div
+				className={`items-center justify-between ${isMenuOpen && "bg-[#181818c5]"
+					} w-full md:flex md:w-auto md:order-1 ${isMenuOpen ? "block" : "hidden"
+					}`}
+				id="navbar-sticky"
+			>
+				<div className={style.headerItems}>
+					<div
+						className={style.headerItem}
+						onClick={() => {
+							router.push("/create");
+						}}
+					>
+						Create Profile
+					</div>
 
-			{/* search bar to search streams */}
-			<div className={style.searchBar}>
-				<div className={style.searchIcon}>
-					<AiOutlineSearch />
-				</div>
-				<input
-					className={style.searchInput}
-					type="text"
-					defaultValue={searchQuery}
-					placeholder="Enter Text"
-				//  onKeyPress={(e) => {
-				// if (e.key === 'Enter')
-				//     console.log(searchQuery)
-				// }}
-				/>
-				<button
-					onClick={() => {
-						router.push(`/searching/${searchQuery}`);
-					}}
-					className="text-white px-2"
-				>
-					Search
-				</button>
-			</div>
+					<div
+						className={style.headerItem}
+						onClick={() => {
+							router.push("/dashboard");
+						}}
+					>
+						Dashboard
+					</div>
 
-			<div className={style.headerItems}>
-				<Link href="/searching">
-					{/* <div className={style.headerItem}> Streaming </div> */}
-				</Link>
-
-				<div
-					className={style.headerItem}
-					onClick={() => {
-						router.push("/explore");
-					}}
-				>
-					Explore
-				</div>
-
-				{/* <div className={style.headerIcon} onClick={() => { router.push(`/profile/${address}`) }}> */}
-				<div
-					className={style.headerIcon}
-					onClick={() => {
-						router.push("/nft");
-					}}
-				>
-					<CgProfile />
-				</div>
-				<div className={style.headerIcon}>
-					<MdOutlineAccountBalanceWallet />
-				</div>
-				<div>
-					<ConnectButton />
+					<div
+						className={style.headerItem}
+						onClick={() => {
+							router.push("/records");
+						}}
+					>
+						Records
+					</div>
+					<div
+						className={style.headerItem}
+						onClick={() => {
+							router.push("/doctors");
+						}}
+					>
+						Doctors
+					</div>
 				</div>
 			</div>
+			<div className="flex md:order-2 space-x-1 md:space-x-0">
+				<ConnectButton />
+			</div>
+
 		</div>
 	);
 }
