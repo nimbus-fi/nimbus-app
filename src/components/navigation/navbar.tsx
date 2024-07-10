@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Router, { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import Logo from "../../../public/assets/nimbus-bg.png"
+import Logo from "../../../public/assets/nimbus-black-bg.png"
 import { AiOutlineSearch } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
@@ -11,15 +11,15 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 
 const style = {
-	wrapper: `flex flex-wrap items-center justify-between bg-black w-screen px-[1.2rem] py-[0.8rem] `,
+	wrapper: `flex flex-wrap items-center justify-between bg-white w-screen px-[1.2rem] py-[0.8rem] `,
 	logoContainer: `flex items-center cursor-pointer`,
-	logoText: ` ml-[0.8rem] text-white font-semibold text-2xl`,
+	logoText: ` ml-[0.8rem] text-black font-semibold text-2xl`,
 	searchBar: `flex flex-1 mx-[0.8rem] w-max-[520px] items-center bg-[#363840] rounded-[0.8rem] hover:bg-[#4c505c]`,
 	searchIcon: `text-[#8a939b] mx-3 font-bold text-lg`,
 	searchInput: `h-[2.6rem] w-full border-0 bg-transparent outline-0 ring-0 px-2 pl-0 text-[#e6e8eb] placeholder:text-[#8a939b]`,
 	headerItems: ` flex items-center align-right justify-end`,
-	headerItem: `text-white px-4 font-bold text-[#c8cacd] hover:text-white cursor-pointer`,
-	headerIcon: `text-[#8a939b] text-3xl font-black px-4 hover:text-white cursor-pointer`,
+	headerItem: `text-black px-4 font-bold text-[#c8cacd] hover:text-black cursor-pointer`,
+	headerIcon: `text-[#8a939b] text-3xl font-black px-4 hover:text-black cursor-pointer`,
 };
 
 export default function Navbar() {
@@ -34,9 +34,9 @@ export default function Navbar() {
 			<Link href="/">
 				<div className={style.logoContainer}>
 					<Image src={Logo} height={40} width={70} alt="mantle logo" />
-					<div className="text-[32px] text-white font-serif pl-5"
+					<div className="text-[32px] text-black font-serif pl-5"
 					>
-						FraxCare
+						Nimbus Fi
 					</div>
 					<div className={style.logoText}></div>
 				</div>
@@ -69,18 +69,18 @@ export default function Navbar() {
 					<div
 						className={style.headerItem}
 						onClick={() => {
-							router.push("/records");
+							router.push("/borrow");
 						}}
 					>
-						Records
+						Borrow
 					</div>
 					<div
 						className={style.headerItem}
 						onClick={() => {
-							router.push("/doctors");
+							router.push("/goverance");
 						}}
 					>
-						Doctors
+						Goverance
 					</div>
 				</div>
 			</div>

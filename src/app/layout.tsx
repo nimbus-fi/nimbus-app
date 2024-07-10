@@ -21,10 +21,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <Navbar />
-          {children}
+          <div className="min-h-screen bg-gradient-to-r from-blue-300 via-green-200 to-yellow-300 bg-opacity-50 ">
+            <Navbar />
+            {children}
+          </div>
         </Providers>
+
       </body>
-    </html>
+    </html >
   )
 }
