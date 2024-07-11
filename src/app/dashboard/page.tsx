@@ -5,22 +5,19 @@ import { useAccount } from 'wagmi'
 const Dashboard = () => {
     const account = useAccount();
     const { isConnected, address } = account;
-    // const { sendTransaction, fetchQuery } = useTransaction();
-    // const { status, address } = useChain(CHAIN_NAME);
-    // console.log("status", status, "address", address)
 
-    // create states for restaked, delegated, restaked points, restaked ratio
-    const [restaked, setRestaked] = React.useState("0.1");
-    const [delegated, setDelegated] = React.useState("0.2");
-    const [restakedPoints, setRestakedPoints] = React.useState("0");
-    const [tokenTransaction, setTokenTransaction] = React.useState("2");
+    // create states for lend, borrow, lend points, lend ratio
+    const [lend, setLend] = useState("0.1");
+    const [borrow, setBorrow] = useState("0.2");
+    const [lendPoints, setLendPoints] = useState("0");
+    const [tokenTransaction, setTokenTransaction] = useState("2");
 
-    const [HistroyqueryData, setHistoryQueryData] = React.useState()
-    const [StakequeryData, setStakeQueryData] = React.useState()
-    const [RestakequeryData, setRestakeQueryData] = React.useState()
-    const [RewardequeryData, setRewardQueryData] = React.useState()
-    const [UnbondRequestData, setUnbondReQuestQueryData] = React.useState()
-    const [DelegationData, setDelegationDataQueryData] = React.useState()
+    const [HistroyqueryData, setHistoryQueryData] = useState()
+    const [StakequeryData, setStakeQueryData] = useState()
+    const [RestakequeryData, setRestakeQueryData] = useState()
+    const [RewardequeryData, setRewardQueryData] = useState()
+    const [UnbondRequestData, setUnbondReQuestQueryData] = useState()
+    const [DelegationData, setDelegationDataQueryData] = useState()
 
 
     const convertToNibi = (value: string): string => {
@@ -29,15 +26,15 @@ const Dashboard = () => {
         return dividedValue.toString();
     }
 
-    const calculateRestakedPoints = () => {
-        const restakedPoint = (parseFloat(restaked) + parseFloat(delegated)) * 2;
-        return restakedPoint.toString();
+    const calculateLendPoints = () => {
+        const lendPoint = (parseFloat(lend) + parseFloat(borrow)) * 2;
+        return lendPoint.toString();
     }
 
 
     useEffect(() => {
-        const points = calculateRestakedPoints();
-        setRestakedPoints(points);
+        const points = calculateLendPoints();
+        setLendPoints(points);
     }, [isConnected, address,]);
 
     // useEffect(() => {
@@ -53,7 +50,7 @@ const Dashboard = () => {
                         <h2 className="card-title"> Your Deposits  </h2>
                         <div className="p-5">
                             {isConnected ? (
-                                <div className="font-bold text-2xl "> {restaked} UBIT</div>
+                                <div className="font-bold text-2xl "> {lend} UBIT</div>
                             ) : (
                                 <div>
                                     <progress className="progress p-2 "></progress>
@@ -67,7 +64,7 @@ const Dashboard = () => {
                         <h2 className="card-title">Your Loans</h2>
                         <div className="p-5">
                             {isConnected ? (
-                                <div className="font-bold text-2xl "> {delegated} UBIT</div>
+                                <div className="font-bold text-2xl "> {borrow} UBIT</div>
                             ) : (
                                 <div>
                                     <progress className="progress p-2 "></progress>
@@ -82,11 +79,11 @@ const Dashboard = () => {
                     <div className="m-5 p-5 rounded-lg">
                         <div className="p-0">
                             {isConnected ? (
-                                <div className="font-bold text-2xl "> {restakedPoints} Points</div>
+                                <div className="font-bold text-2xl "> {lendPoints} Points</div>
                             ) : (
                                 <div>
                                     <progress
-                                        className="progress p-2 "
+                                        className="progress p-2 bg-gray-100"
                                         value={0}
                                         max="100"
                                     ></progress>
@@ -104,7 +101,7 @@ const Dashboard = () => {
                             ) : (
                                 <div>
                                     <progress
-                                        className="progress p-2 "
+                                        className="progress p-2 bg-gray-100"
                                         value={0}
                                         max="100"
                                     ></progress>
@@ -119,12 +116,12 @@ const Dashboard = () => {
             {/* loan table  */}
             <div>
                 <div className="text-xl font-bold"> Your Transactions</div>
-                <div className="card w-full my-5 p-5 items-center bg-base-200 shadow-xl">
+                <div className="card w-full my-5 p-5 items-center bg-gray-100 shadow-xl">
                     {!isConnected ? (
                         <div className="card-body">
 
                             <h2 className="card-title">
-                                Connect your wallet to view your restaked tokens
+                                Connect your wallet to view your loan transactions
                             </h2>
                         </div>
                     )
@@ -150,7 +147,7 @@ const Dashboard = () => {
                             Action
                           </th> */}
                                                 {/* <th scope="col" className="px-6 py-3">
-                            <span className="sr-only">Delegate</span>
+                            <span className="sr-only">Borrow</span>
                           </th> */}
                                             </tr>
                                         </thead>
@@ -172,7 +169,7 @@ const Dashboard = () => {
                                                     5%
                                                 </td>
                                                 {/* <td className="px-6 py-4 text-right">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delegate</a>
+                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Borrow</a>
                           </td> */}
                                             </tr>
                                             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -192,7 +189,7 @@ const Dashboard = () => {
                                                     10%
                                                 </td>
                                                 {/* <td className="px-6 py-4 text-right">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delegate</a>
+                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Borrow</a>
                           </td> */}
                                             </tr>
                                             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -213,7 +210,7 @@ const Dashboard = () => {
                                                     10%
                                                 </td>
                                                 {/* <td className="px-6 py-4 text-right">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delegate</a>
+                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Borrow</a>
                           </td> */}
                                             </tr>
                                             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -234,7 +231,7 @@ const Dashboard = () => {
                                                     10%
                                                 </td>
                                                 {/* <td className="px-6 py-4 text-right">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delegate</a>
+                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Borrow</a>
                           </td> */}
                                             </tr>
                                         </tbody>

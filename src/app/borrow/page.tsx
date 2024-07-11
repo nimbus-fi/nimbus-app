@@ -16,11 +16,15 @@ const Borrow: React.FC = () => {
     }
 
     if (!account.isConnected) {
-        return <div>Please connect your wallet to borrow.</div>
+        return <div className="flex items-center align-middle min-h-screen text-center justify-center text-4xl font-bold">
+            <div>
+                Please connect your wallet.
+            </div>
+        </div>
     }
 
     return (
-        <div>
+        <div className="flex flex-col justify-between px-28 py-16">
             <h1 className="text-3xl font-bold mb-6">Borrow</h1>
             <form onSubmit={handleBorrow} className="max-w-md">
                 <div className="mb-4">
@@ -30,7 +34,7 @@ const Borrow: React.FC = () => {
                         id="amount"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 border rounded-xl bg-white "
                         required
                     />
                 </div>
@@ -41,11 +45,11 @@ const Borrow: React.FC = () => {
                         id="collateral"
                         value={collateral}
                         onChange={(e) => setCollateral(e.target.value)}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 border rounded-xl bg-white "
                         required
                     />
                 </div>
-                <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
+                <button type="submit" className="bg-black text-xl font-semibold text-white px-6 py-4 rounded-xl">
                     Borrow
                 </button>
             </form>

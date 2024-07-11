@@ -14,7 +14,11 @@ const Governance: React.FC = () => {
     }
 
     if (!account.isConnected) {
-        return <div>Please connect your wallet to participate in governance.</div>
+        return <div className="flex items-center align-middle min-h-screen text-center justify-center text-4xl font-bold">
+            <div>
+                Please connect your wallet.
+            </div>
+        </div>
     }
 
     return (
