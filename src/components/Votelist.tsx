@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from 'react'
-import { Box, Button, Flex, Card, Table, Thead, Tbody, Tr, Th, Td, Badge } from '@chakra-ui/react'
 
 export default function Votelist() {
     const [votes, setVotes] = useState([
