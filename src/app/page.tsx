@@ -19,18 +19,21 @@ export default function Home() {
               <div className="bg-white p-6 rounded-xl shadow-xl ">
                 <Link
                   href="/lend">
-                  <h2 className="text-2xl font-semibold mb-4">For Lenders</h2>
-                  <p>Earn competitive interest rates by providing liquidity to the community.</p>
+                  <div className="bg-white p-6 rounded-xl ">
+                    <h2 className="text-2xl font-semibold mb-4">For Lenders</h2>
+                    <p>Earn competitive interest rates by providing liquidity to the community.</p>
+                  </div>
                 </Link>
-
               </div>
-              <Link
-                href="/borrow">
-                <div className="bg-white p-6 rounded-xl shadow-xl ">
-                  <h2 className="text-2xl font-semibold mb-4">For Borrowers</h2>
-                  <p>Access loans backed by cryptocurrency assets at favorable rates.</p>
-                </div>
-              </Link>
+              <div className="bg-white p-6 rounded-xl shadow-xl ">
+                <Link
+                  href="/borrow">
+                  <div className="bg-white p-6 rounded-xl ">
+                    <h2 className="text-2xl font-semibold mb-4">For Borrowers</h2>
+                    <p>Access loans backed by cryptocurrency assets at favorable rates.</p>
+                  </div>
+                </Link>
+              </div>
             </div>
 
           </div>

@@ -49,7 +49,7 @@ const Borrow: React.FC = () => {
                         required
                     />
                 </div>
-                <button type="submit" className="bg-black text-xl font-semibold text-white px-6 py-4 rounded-xl">
+                <button type="submit" className="bg-black text-xl font-semibold text-white px-5 py-3 rounded-xl">
                     Borrow
                 </button>
             </form>

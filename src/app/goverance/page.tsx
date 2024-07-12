@@ -22,8 +22,9 @@ const Governance: React.FC = () => {
     }
 
     return (
-        <div>
-            <h1 className="text-3xl font-bold mb-6">Governance</h1>
+        <div className="flex flex-col justify-between px-28 py-16">
+            <div className="pb-5 text-[30px] font-bold ">Governance
+            </div>
             <div className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4">Active Proposals</h2>
                 {/* Add list of active proposals here */}
@@ -38,7 +39,7 @@ const Governance: React.FC = () => {
                             id="title"
                             value={proposalTitle}
                             onChange={(e) => setProposalTitle(e.target.value)}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded-xl bg-white"
                             required
                         />
                     </div>
@@ -48,12 +49,12 @@ const Governance: React.FC = () => {
                             id="description"
                             value={proposalDescription}
                             onChange={(e) => setProposalDescription(e.target.value)}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded-xl bg-white"
                             rows={4}
                             required
                         ></textarea>
                     </div>
-                    <button type="submit" className="bg-purple-600 text-white px-4 py-2 rounded">
+                    <button type="submit" className="bg-black text-xl font-semibold text-white px-5 py-3 rounded-xl">
                         Submit Proposal
                     </button>
                 </form>

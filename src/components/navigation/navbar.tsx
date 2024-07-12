@@ -33,7 +33,7 @@ export default function Navbar() {
 		<div className={style.wrapper}>
 			<Link href="/">
 				<div className={style.logoContainer}>
-					<Image src={Logo} height={40} width={70} alt="mantle logo" />
+					<Image src={Logo} height={50} width={100} alt="mantle logo" />
 					<div className="text-[32px] text-black font-serif pl-5"
 					>
 						Nimbus Fi
