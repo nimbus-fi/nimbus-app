@@ -4,6 +4,17 @@
 
 Nimbus Fi is a decentralized finance (DeFi) platform that enables users to form community-based credit unions for lending and borrowing at preferential rates. The platform leverages smart contracts for governance and operations, providing a secure and transparent financial ecosystem.
 
+## Smart Contracts 
+
+| Contract Name                      | Address                                      |
+|------------------------------------|----------------------------------------------|
+| COMMUNITY_UNION_ADDRESS            | `0x832716905503D1AedCf324765eD3c7c49b65a57e` |
+| LENDING_POOL_ADDRESS               | `0x92589b38d3B5d32318b328B985408babF4379d3F` |
+| GOVERNANCE_ADDRESS                 | `0xDa2656359decA09E2Bf335CAe988421b2a740ADe` |
+| COLLATERAL_MANAGER_ADDRESS         | `0x80680813A9B99d550eD5F815aA451f137A736Bd6` |
+| NIMBUS_TOKEN_ADDRESS               | `0x6Bbe2559Ea2fbB1634e343AabfFA6E5bAE2d9229` |
+| COLLATERAL_NIMBUS_TOKEN_ADDRESS    | `0xF312CAD90A6943b9718d3E73d0bf6f9D4b497f35` |
+
 ## Key Features
 
 1. **Community-Based Credit Unions**

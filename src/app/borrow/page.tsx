@@ -1,11 +1,13 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
-import { getLendingPoolContract } from '../utils/contracts'
+import { useAccount } from 'wagmi'
+import { getLendingPoolContract } from '@/lib/contract'
 
 const Borrow: React.FC = () => {
-    const { active, account, library } = useWeb3React()
+    const { address, isConnected } = useAccount()
+    const active = isConnected && address
+
     const [amount, setAmount] = useState('')
     const [collateral, setCollateral] = useState('')
     const [activeLoan, setActiveLoan] = useState<any>(null)
@@ -13,15 +15,16 @@ const Borrow: React.FC = () => {
     const [isRepaying, setIsRepaying] = useState(false)
 
     useEffect(() => {
-        if (active && account) {
+        if (isConnected && address) {
             fetchActiveLoan()
         }
-    }, [active, account])
+    }, [isConnected, address])
 
     const fetchActiveLoan = async () => {
-        if (library) {
-            const contract = getLendingPoolContract(library)
-            const loan = await contract.loans(account)
+        if (isConnected && address) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const contract = getLendingPoolContract(provider)
+            const loan = await contract.loans(address)
             if (loan.amount.gt(0) && !loan.repaid) {
                 setActiveLoan({
                     amount: ethers.utils.formatEther(loan.amount),
@@ -37,10 +40,11 @@ const Borrow: React.FC = () => {
 
     const handleBorrow = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (library) {
+        if (isConnected && address) {
             try {
                 setIsBorrowing(true)
-                const contract = getLendingPoolContract(library)
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const contract = getLendingPoolContract(provider)
                 const amountInWei = ethers.utils.parseEther(amount)
                 const tx = await contract.takeLoan(amountInWei)
                 await tx.wait()
@@ -56,10 +60,11 @@ const Borrow: React.FC = () => {
     }
 
     const handleRepay = async () => {
-        if (library && activeLoan) {
+        if (isConnected && address && activeLoan) {
             try {
                 setIsRepaying(true)
-                const contract = getLendingPoolContract(library)
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const contract = getLendingPoolContract(provider)
                 const tx = await contract.repayLoan()
                 await tx.wait()
                 await fetchActiveLoan()
