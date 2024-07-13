@@ -37,10 +37,6 @@ const Dashboard = () => {
         setLendPoints(points);
     }, [isConnected, address,]);
 
-    // useEffect(() => {
-
-    // }, []);
-
     return (
         <div className="flex flex-col justify-between px-28 py-16">
             <div className="pb-5 text-[30px] font-bold ">Dashboard</div>

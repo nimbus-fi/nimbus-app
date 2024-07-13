@@ -64,7 +64,9 @@ const Governance: React.FC = () => {
         setLoading(true);
         try {
             console.log("Creating proposal:", newProposal);
-            const contract = getGovernanceContract();
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const contract = new ethers.Contract(GOVERNANCE_ADDRESS, GovernanceABI.abi, provider.getSigner());
+            console.log("contract", contract);
             const tx = await contract.createProposal(newProposal);
             await tx.wait();
             setNewProposal('');
