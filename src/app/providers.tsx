@@ -79,7 +79,6 @@ const demoAppInfo = {
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
-    console.log("wallet", process.env.WALLET_CONNECT_PROJECT_ID)
     const [mounted, setMounted] = React.useState(false);
     React.useEffect(() => setMounted(true), []);
     return (
