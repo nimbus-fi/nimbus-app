@@ -118,19 +118,19 @@ export default function Funding() {
             toast.error("Please install MetaMask!");
             return;
         }
-    
+
         try {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = getCommunityUnionContract(provider);
-    
+
             const amountWei = ethers.utils.parseUnits(amount, 18);
-    
+
             // Withdraw tokens
             const withdrawTx = await contract.withdraw(amountWei, isNimbus);
             toast.info("Withdrawal in progress...");
-            
+
             await withdrawTx.wait();
-    
+
             toast.success("Withdrawal successful");
         } catch (error) {
             console.error("Error withdrawing:", error);
@@ -184,9 +184,9 @@ export default function Funding() {
                                         >
                                             <option value="NIBS">NIBS (Nimbus Token)</option>
                                             <option value="COLLATERAL">wNIBS (Collateral Token)</option>
-                                            <option value="USC">USC</option>
-                                            <option value="ETH">ETH</option>
-                                            <option value="USDC">USDC</option>
+                                            <option value="USC">USC (soon)</option>
+                                            <option value="ETH">ETH (soon)</option>
+                                            <option value="USDC">USDC (soon)</option>
                                         </select>
                                     </label>
                                 </div>
@@ -242,9 +242,9 @@ export default function Funding() {
                                         >
                                             <option value="NIBS">NIBS (Nimbus Token)</option>
                                             <option value="COLLATERAL">wNIBS (Collateral Token)</option>
-                                            <option value="USC">USC</option>
-                                            <option value="ETH">ETH</option>
-                                            <option value="USDC">USDC</option>
+                                            <option value="USC">USC (soon)</option>
+                                            <option value="ETH">ETH (soon)</option>
+                                            <option value="USDC">USDC (soon)</option>
                                         </select>
                                     </label>
                                 </div>
