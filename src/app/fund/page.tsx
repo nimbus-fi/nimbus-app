@@ -2,24 +2,32 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
 import { useAccount } from 'wagmi';
 import { ethers } from 'ethers';
-import { COMMUNITY_UNION_ADDRESS, LENDING_POOL_ADDRESS, NIMBUS_TOKEN_ADDRESS, COLLATERAL_MANAGER_ADDRESS } from '@/lib/contract';
-
+import { COMMUNITY_UNION_ADDRESS, LENDING_POOL_ADDRESS, NIMBUS_TOKEN_ADDRESS, COLLATERAL_MANAGER_ADDRESS, COLLATERAL_TOKEN_ADDRESS } from '@/lib/contract';
+import COMMUNITY_UNION from '@/lib/abi/CommunityUnion.json';
+import LENDING_POOL from '@/lib/abi/LendingPool.json';
+import ERC20 from '@/lib/abi/MyToken.json';
+import { getCommunityUnionContract, getLendingPoolContract } from '@/lib/contract';
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Funding() {
-    const { address } = useAccount();
+    const { address, isConnected } = useAccount();
     const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
 
     const [open, setOpen] = useState<string>("deposit");
     const [amount, setAmount] = useState<string>("");
     const [asset, setAsset] = useState<string>("NIBS");
     const [exchange, setExchange] = useState<string>("1");
+    const [isNimbusToken, setIsNimbusToken] = useState<boolean>(true);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search)
         setOpen(searchParams.get("state") || "deposit");
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        setProvider(provider);
-    }, [address, provider]);
+        if (typeof window !== 'undefined' && window.ethereum) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            setProvider(provider);
+        }
+    }, []);
 
     const handleTabOpen = (tabCategory: string) => {
         setOpen(tabCategory);
@@ -29,23 +37,106 @@ export default function Funding() {
         setAmount(e.target.value);
     };
 
+    const getTokenAddress = (asset: string) => {
+        switch (asset) {
+            case "NIBS":
+                setIsNimbusToken(true);
+                return NIMBUS_TOKEN_ADDRESS;
+            case "COLLATERAL":
+                setIsNimbusToken(false);
+                return COLLATERAL_MANAGER_ADDRESS;
+            // Add other token addresses as needed
+            default:
+                return NIMBUS_TOKEN_ADDRESS;
+        }
+    };
+
     const deposit = async (event: React.FormEvent) => {
         event.preventDefault();
+        if (!isConnected || !provider) {
+            toast.error("Please connect your wallet");
+            return;
+        }
 
         try {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const contract = new ethers.Contract(COMMUNITY_UNION_ADDRESS, COMMUNITY_UNION.abi, provider.getSigner());
-            console.log("contract", contract);
+            const contract = getCommunityUnionContract(provider);
 
+            // Get token sign
+            const tokenAddress = isNimbusToken ? NIMBUS_TOKEN_ADDRESS : COLLATERAL_TOKEN_ADDRESS;
+            const tokenContract = new ethers.Contract(
+                tokenAddress, ERC20.abi, provider.getSigner()
+            );
+            const amountWei = ethers.utils.parseUnits(amount, 18);
+            console.log("deposit amount:", amountWei.toString());
+
+            // Approve the contract to spend tokens
+            const approveTx = await tokenContract.approve(contract.address, amountWei);
+            await approveTx.wait();
+
+            // Deposit tokens
+            const depositTx = await contract.deposit(amountWei, isNimbusToken);
+            await depositTx.wait();
+
+            toast.success("Deposit successful");
+            setAmount("");
         } catch (error) {
-            console.error("Error creating proposal:", error);
-        } finally {
-            console.log("Proposal created successfully");
+            console.error("Error depositing:", error);
+            toast.error("Error depositing. Please try again.");
         }
     };
 
     const borrow = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        if (!isConnected || !provider) {
+            toast.error("Please connect your wallet");
+            return;
+        }
+
+        try {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const contract = getCommunityUnionContract(provider);
+
+            const amountWei = ethers.utils.parseUnits(amount, 18);
+
+            // Borrow tokens
+            const borrowTx = await contract.borrow(amountWei, { gasLimit: 100000 });
+            toast.info("Borrowing in progress...");
+
+            await borrowTx.wait();
+
+            toast.success("Borrow successful");
+        } catch (error) {
+            console.error("Error borrowing:", error);
+            toast.error("Error borrowing. Please try again.");
+        }
+    };
+
+    const withdraw = async (amount: string, isNimbus: boolean) => {
+        event.preventDefault();
+
+        if (!window.ethereum) {
+            toast.error("Please install MetaMask!");
+            return;
+        }
+    
+        try {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const contract = getCommunityUnionContract(provider);
+    
+            const amountWei = ethers.utils.parseUnits(amount, 18);
+    
+            // Withdraw tokens
+            const withdrawTx = await contract.withdraw(amountWei, isNimbus);
+            toast.info("Withdrawal in progress...");
+            
+            await withdrawTx.wait();
+    
+            toast.success("Withdrawal successful");
+        } catch (error) {
+            console.error("Error withdrawing:", error);
+            toast.error("Error withdrawing. Please try again.");
+        }
     };
 
     return (
@@ -187,6 +278,7 @@ export default function Funding() {
                     )}
                 </div>
             </div>
+            <ToastContainer />
         </main>
     );
 }

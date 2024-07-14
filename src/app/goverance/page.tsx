@@ -9,11 +9,13 @@ import "react-toastify/dist/ReactToastify.css";
 
 interface Proposal {
     id: number;
+    name: string;
     description: string;
     forVotes: string;
     againstVotes: string;
     executed: boolean;
     endTime: Date;
+    proposer: string;
 }
 
 const Governance: React.FC = () => {
@@ -21,8 +23,8 @@ const Governance: React.FC = () => {
     const address = account.address;
 
     const [proposals, setProposals] = useState<Proposal[]>([]);
-    const [proposalDescription, setProposalDescription] = useState('')
-    const [newProposal, setNewProposal] = useState('');
+    const [newProposalName, setNewProposalName] = useState('');
+    const [newProposalDescription, setNewProposalDescription] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -36,109 +38,75 @@ const Governance: React.FC = () => {
             };
             fetchData();
         }
-    }, [address, account.isConnected]);
+    }, [address, account.chainId, account.isConnected]);
+
 
     const getGovernanceContract = () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        console.log("provider", provider);
         if (!provider) throw new Error("No Web3 Provider");
         return new ethers.Contract(GOVERNANCE_ADDRESS, GovernanceABI.abi, provider.getSigner());
     };
 
     const fetchProposals = async () => {
-        const contract = getGovernanceContract();
-        const count = await contract.getProposalCount();
-        const fetchedProposals: Proposal[] = [];
+        try {
+            const contract = getGovernanceContract();
+            const count = await contract.getProposalCount();
+            const fetchedProposals: Proposal[] = [];
 
-        for (let i = 0; i < count.toNumber(); i++) {
-            const proposal = await contract.getProposal(i);
-            fetchedProposals.push({
-                id: i,
-                description: proposal.description,
-                forVotes: ethers.utils.formatEther(proposal.forVotes),
-                againstVotes: ethers.utils.formatEther(proposal.againstVotes),
-                executed: proposal.executed,
-                endTime: new Date(proposal.endTime.toNumber() * 1000)
-            });
+            for (let i = 0; i < count.toNumber(); i++) {
+                const proposal = await contract.getProposal(i);
+                fetchedProposals.push({
+                    id: i,
+                    name: proposal.name,
+                    description: proposal.description,
+                    forVotes: ethers.utils.formatEther(proposal.forVotes),
+                    againstVotes: ethers.utils.formatEther(proposal.againstVotes),
+                    executed: proposal.executed,
+                    endTime: new Date(proposal.endTime.toNumber() * 1000),
+                    proposer: proposal.proposer
+                });
+            }
+            setProposals(fetchedProposals);
+        } catch (error) {
+            console.error("Error fetching proposals:", error);
+            toast.error("Failed to fetch proposals");
         }
-        setProposals(fetchedProposals);
     };
-
-    // const createProposal = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     if (!newProposal.trim()) return;
-
-    //     setLoading(true);
-    //     try {
-    //         console.log("Creating proposal:", newProposal);
-    //         const provider = new ethers.providers.Web3Provider(window.ethereum);
-    //         const contract = new ethers.Contract(GOVERNANCE_ADDRESS, GovernanceABI.abi, provider.getSigner());
-    //         console.log("contract", contract);
-    //         const tx = await contract.createProposal(newProposal);
-    //         await tx.wait();
-    //         setNewProposal('');
-    //         await fetchProposals();
-    //     } catch (error) {
-    //         console.error("Error creating proposal:", error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
-    // const vote = async (proposalId: number, support: boolean) => {
-    //     setLoading(true);
-    //     try {
-    //         const contract = getGovernanceContract();
-    //         const tx = await contract.vote(proposalId, support);
-    //         await tx.wait();
-    //         await fetchProposals();
-    //     } catch (error) {
-    //         console.error("Error voting:", error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
 
     const createProposal = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!newProposal.trim()) return;
+        if (!newProposalName.trim() || !newProposalDescription.trim()) return;
 
         setLoading(true);
         try {
-            console.log("Creating proposal:", newProposal);
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const contract = new ethers.Contract(GOVERNANCE_ADDRESS, GovernanceABI.abi, provider.getSigner());
-            console.log("contract", contract);
-            const tx = await contract.createProposal(newProposal);
+            console.log("Creating proposal:", newProposalName, newProposalDescription);
+            const contract = getGovernanceContract();
+            // For this example, we're not including execution data
+            const executionData = "0x";
+            const tx = await contract.createProposal(newProposalName, newProposalDescription, executionData);
             console.log("Transaction sent:", tx.hash);
             const receipt = await tx.wait();
             console.log("Transaction confirmed:", receipt);
-            toast.success("Proposal Created Successfully !", {
-                position: "top-center"
-            });
+            toast.success("Proposal Created Successfully!");
 
             toast(
                 <div>
                     Link - {`https://testnet.ubitscan.io/tx/${tx.hash}`}
-                    {"top-right"}
-                    < button > Retry</button>
-                </div >
-            )
+                </div>
+            );
 
-            setNewProposal('');
+            setNewProposalName('');
+            setNewProposalDescription('');
             await fetchProposals();
         } catch (error) {
-            console.error("Error:", error);
-            toast.error("Failed to create proposal !", {
-                position: "top-right"
-            });
+            console.error("Error creating proposal:", error);
+            toast.error("Failed to create proposal!");
 
             toast(
                 <div>
-                    {/* @ts-ignore */}
-                    {error?.reason}
+                    {(error as any)?.reason || "Unknown error occurred"}
                 </div>
-            )
+            );
         } finally {
             setLoading(false);
         }
@@ -147,47 +115,75 @@ const Governance: React.FC = () => {
     const vote = async (proposalId: number, support: boolean) => {
         setLoading(true);
         try {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const contract = new ethers.Contract(GOVERNANCE_ADDRESS, GovernanceABI.abi, provider.getSigner());
-            console.log("Voting proposal:", proposalId, support);
+            const contract = getGovernanceContract();
+            console.log("Voting on proposal:", proposalId, support);
             const tx = await contract.vote(proposalId, support);
+            console.log("Transaction sent:", tx.hash);
             const receipt = await tx.wait();
-            console.log("Voted successfully:", receipt);
-            toast.success("Proposal Created Successfully !", {
-                position: "top-right"
-            });
+            console.log("Transaction confirmed:", receipt);
+            toast.success("Voted Successfully!");
 
             toast(
                 <div>
                     Link - {`https://testnet.ubitscan.io/tx/${tx.hash}`}
-                </div >
-            )
+                </div>
+            );
 
-            setNewProposal('');
             await fetchProposals();
         } catch (error) {
-            console.error("Error voting proposal:", error);
-            toast.error("Failed to vote proposal !", {
-                position: "top-right"
-            });
+            console.error("Error voting:", error);
+            toast.error("Failed to vote!");
 
             toast(
                 <div>
-                    {/* @ts-ignore */}
-                    {error?.message}
+                    {(error as any)?.reason || "Unknown error occurred"}
                 </div>
-            )
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const executeProposal = async (proposalId: number) => {
+        setLoading(true);
+        try {
+            const contract = getGovernanceContract();
+            console.log("Executing proposal:", proposalId);
+            const tx = await contract.executeProposal(proposalId);
+            console.log("Transaction sent:", tx.hash);
+            const receipt = await tx.wait();
+            console.log("Transaction confirmed:", receipt);
+            toast.success("Proposal Executed Successfully!");
+
+            toast(
+                <div>
+                    Link - {`https://testnet.ubitscan.io/tx/${tx.hash}`}
+                </div>
+            );
+
+            await fetchProposals();
+        } catch (error) {
+            console.error("Error executing proposal:", error);
+            toast.error("Failed to execute proposal!");
+
+            toast(
+                <div>
+                    {(error as any)?.reason || "Unknown error occurred"}
+                </div>
+            );
         } finally {
             setLoading(false);
         }
     };
 
     if (!account.isConnected) {
-        return <div className="flex items-center align-middle min-h-screen text-center justify-center text-4xl font-bold">
-            <div>
-                Please connect your wallet.
+        return (
+            <div className="flex items-center align-middle min-h-screen text-center justify-center text-4xl font-bold">
+                <div>
+                    Please connect your wallet.
+                </div>
             </div>
-        </div>
+        );
     }
 
     return (
@@ -197,23 +193,18 @@ const Governance: React.FC = () => {
             <form onSubmit={createProposal} className="mb-8 ">
                 <input
                     type="text"
-                    value={newProposal}
-                    onChange={(e) => setNewProposal(e.target.value)}
-                    placeholder="Enter new proposal"
-                    className="w-full p-2 border rounded bg-white"
+                    value={newProposalName}
+                    onChange={(e) => setNewProposalName(e.target.value)}
+                    placeholder="Enter proposal name"
+                    className="w-full p-2 border rounded bg-white mb-2"
                 />
-                <div className="my-4">
-                    <textarea
-                        id="description"
-                        value={proposalDescription}
-                        placeholder="Proposal Description"
-
-                        onChange={(e) => setProposalDescription(e.target.value)}
-                        className="w-full p-2 border rounded-xl bg-white"
-                        rows={3}
-                        required
-                    ></textarea>
-                </div>
+                <textarea
+                    value={newProposalDescription}
+                    onChange={(e) => setNewProposalDescription(e.target.value)}
+                    placeholder="Enter proposal description"
+                    className="w-full p-2 border rounded bg-white mb-2"
+                    rows={3}
+                />
                 <button
                     type="submit"
                     disabled={loading}
@@ -227,9 +218,11 @@ const Governance: React.FC = () => {
                 <h2 className="text-2xl font-semibold mb-4">Active Proposals</h2>
                 {proposals.map((proposal) => (
                     <div key={proposal.id} className="border p-4 mb-4 rounded">
-                        <h3 className="text-xl font-semibold">{proposal.description}</h3>
+                        <h3 className="text-xl font-semibold">{proposal.name}</h3>
+                        <p className="text-gray-600 mb-2">{proposal.description}</p>
                         <p>For: {proposal.forVotes} | Against: {proposal.againstVotes}</p>
                         <p>Ends: {proposal.endTime.toLocaleString()}</p>
+                        <p>Proposer: {proposal.proposer}</p>
                         {!proposal.executed && new Date() < proposal.endTime && (
                             <div className="mt-2">
                                 <button
@@ -248,11 +241,21 @@ const Governance: React.FC = () => {
                                 </button>
                             </div>
                         )}
+                        {!proposal.executed && new Date() >= proposal.endTime && (
+                            <button
+                                onClick={() => executeProposal(proposal.id)}
+                                disabled={loading}
+                                className="mt-2 bg-purple-500 text-white px-4 py-2 rounded"
+                            >
+                                Execute Proposal
+                            </button>
+                        )}
                     </div>
                 ))}
             </div>
-            <ToastContainer pauseOnFocusLoss  />
-        </div>
+
+            <ToastContainer position="top-right" autoClose={5000} />
+        </div >
     );
 };
 
