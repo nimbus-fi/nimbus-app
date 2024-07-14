@@ -48,14 +48,14 @@ export default function Navbar() {
 				id="navbar-sticky"
 			>
 				<div className={style.headerItems}>
-					<div
+					{/* <div
 						className={style.headerItem}
 						onClick={() => {
 							router.push("/create");
 						}}
 					>
 						Create Profile
-					</div>
+					</div> */}
 
 					<div
 						className={style.headerItem}
@@ -69,10 +69,10 @@ export default function Navbar() {
 					<div
 						className={style.headerItem}
 						onClick={() => {
-							router.push("/borrow");
+							router.push("/fund");
 						}}
 					>
-						Borrow
+						Supply/Borrow
 					</div>
 					<div
 						className={style.headerItem}

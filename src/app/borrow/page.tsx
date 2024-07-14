@@ -46,6 +46,8 @@ const Borrow: React.FC = () => {
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const contract = getLendingPoolContract(provider)
                 const amountInWei = ethers.utils.parseEther(amount)
+                const token = await contract.token()
+                console.log('Token from contract:', token)
                 const tx = await contract.takeLoan(amountInWei)
                 await tx.wait()
                 await fetchActiveLoan()
@@ -77,11 +79,15 @@ const Borrow: React.FC = () => {
     }
 
     if (!active) {
-        return <div>Please connect your wallet to borrow.</div>
+        return <div className="flex items-center align-middle min-h-screen text-center justify-center text-4xl font-bold">
+            <div>
+                Please connect your wallet.
+            </div>
+        </div>
     }
 
     return (
-        <div>
+        <div className="container mx-auto px-32 py-16">
             <h1 className="text-3xl font-bold mb-6">Borrow</h1>
             {activeLoan ? (
                 <div className="mb-6">
@@ -107,7 +113,7 @@ const Borrow: React.FC = () => {
                             id="amount"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded-xl bg-white"
                             required
                         />
                     </div>
@@ -118,13 +124,13 @@ const Borrow: React.FC = () => {
                             id="collateral"
                             value={collateral}
                             onChange={(e) => setCollateral(e.target.value)}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded-xl bg-white"
                             required
                         />
                     </div>
                     <button
                         type="submit"
-                        className="bg-green-600 text-white px-4 py-2 rounded"
+                        className="bg-black text-white px-4 py-2 rounded"
                         disabled={isBorrowing}
                     >
                         {isBorrowing ? 'Borrowing...' : 'Borrow'}
