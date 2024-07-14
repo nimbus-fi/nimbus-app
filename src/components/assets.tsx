@@ -18,6 +18,56 @@ const AssetsTable = () => {
                     <div className="flex p-5 justify-between items-center">
                         <div className="flex flex-row items-center gap-2">
                             <CiDollar className="bg-yellow-300 rounded-xl text-xl" />
+                            <h2 className="text-left text-lg font-semibold ">NIBS</h2>
+                        </div>{" "}
+                        <div className="flex flex-row gap-4">
+                            <div className="flex items-center justify-center">
+                                <div className="w-px h-12 bg-green-300"></div>
+                                <div className="flex flex-col px-2">
+                                    <div> 3 %</div>
+                                    <div className="text-xs">APY</div>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-center">
+                                <div className="w-px h-12 bg-green-300"></div>
+                                <div className="flex flex-col px-2">
+                                    <div> 10000</div>
+                                    <div className="text-xs">Pool</div>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-center">
+                                <div className="flex flex-col px-2">
+                                    <HoverBorderGradient
+                                        containerClassName="rounded-2xl"
+                                        as="button"
+                                        onClick={() => {
+                                            router.push("./fund/?state=deposit");
+                                        }}
+                                        className="dark:bg-black bg-black text-white dark:text-white flex items-center space-x-2"
+                                    >
+                                        Supply
+                                    </HoverBorderGradient>
+                                </div>
+                                <div className="flex flex-col px-2">
+                                    <HoverBorderGradient
+                                        containerClassName="rounded-2xl"
+                                        as="button"
+                                        onClick={() => {
+                                            router.push("./fund/?state=borrow");
+                                        }}
+                                        className="dark:bg-black bg-black text-white dark:text-white flex items-center space-x-2"
+                                    >
+                                        Borrow
+                                    </HoverBorderGradient>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="card w-full my-5 bg-gray-100 shadow-xl">
+                    <div className="flex p-5 justify-between items-center">
+                        <div className="flex flex-row items-center gap-2">
+                            <CiDollar className="bg-yellow-300 rounded-xl text-xl" />
                             <h2 className="text-left text-lg font-semibold ">UBIT</h2>
                         </div>{" "}
                         <div className="flex flex-row gap-4">

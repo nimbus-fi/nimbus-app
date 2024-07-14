@@ -1,6 +1,27 @@
 "use client";
 import React, { useEffect, useState } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount } from 'wagmi';
+import { COMMUNITY_UNION_ADDRESS } from '@/lib/contract';
+import COMMUNITY_UNION from '@/lib/abi/CommunityUnion.json';
+import { ethers } from 'ethers';
+
+interface Transaction {
+    transactionHash: string;
+    type: string;
+    blockNumber: number;
+    previousOwner?: string;
+    newOwner?: string;
+    member?: string;
+    amount?: {
+        type: string;
+        hex: string;
+    };
+    isNimbus?: boolean;
+}
+
+interface TransactionTableProps {
+    transactions: Transaction[];
+}
 
 const Dashboard = () => {
     const account = useAccount();
@@ -12,13 +33,66 @@ const Dashboard = () => {
     const [lendPoints, setLendPoints] = useState("0");
     const [tokenTransaction, setTokenTransaction] = useState("2");
 
-    const [HistroyqueryData, setHistoryQueryData] = useState()
-    const [StakequeryData, setStakeQueryData] = useState()
-    const [RestakequeryData, setRestakeQueryData] = useState()
-    const [RewardequeryData, setRewardQueryData] = useState()
-    const [UnbondRequestData, setUnbondReQuestQueryData] = useState()
-    const [DelegationData, setDelegationDataQueryData] = useState()
+    const [transactions, setTransactions] = useState<TransactionTableProps>();
+    const [loading, setLoading] = useState(false);
 
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            if (isConnected && window.ethereum) {
+                setLoading(true);
+                try {
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    const contract = new ethers.Contract(COMMUNITY_UNION_ADDRESS, COMMUNITY_UNION.abi, provider);
+
+                    const filter = {
+                        address: COMMUNITY_UNION_ADDRESS,
+                        fromBlock: 0,
+                        toBlock: 'latest'
+                    };
+
+                    const events = await provider.getLogs(filter);
+                    const parsedEvents = events.map(log => {
+                        const parsedLog = contract.interface.parseLog(log);
+                        return {
+                            type: parsedLog.name,
+                            ...parsedLog.args,
+                            blockNumber: log.blockNumber,
+                            transactionHash: log.transactionHash
+                        };
+                    });
+
+                    console.log("parsedEvents", parsedEvents, "events", events);
+
+
+                    // const userEvents = parsedEvents.filter(event =>
+                    //     event?.member && event?.member.toLowerCase() === (await provider.getSigner().getAddress()).toLowerCase()
+                    // );
+
+                    // const transactionPromises = userEvents.map(async event => {
+                    //     const block = await provider.getBlock(event.blockNumber);
+                    //     return {
+                    //         ...event,
+                    //         timestamp: block.timestamp,
+                    //         amount: event.amount ? ethers.utils.formatUnits(event.amount, 18) : '0',
+                    //         token: event.isNimbus ? 'Nimbus' : 'Collateral',
+                    //         status: 'Completed'
+                    //     };
+                    // });
+
+                    // const transactions = await Promise.all(transactionPromises);
+                    // @ts-ignore
+                    setTransactions(parsedEvents);
+                } catch (error) {
+                    console.error("Error fetching events:", error);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchEvents();
+    }, [isConnected, address]);
 
     const convertToNibi = (value: string): string => {
         const valueAsNumber = parseFloat(value);
@@ -30,6 +104,13 @@ const Dashboard = () => {
         const lendPoint = (parseFloat(lend) + parseFloat(borrow)) * 2;
         return lendPoint.toString();
     }
+
+    const formatAmount = (amount: Transaction['amount']): string => {
+        if (amount && amount.type === "BigNumber") {
+            return ethers.utils.formatUnits(amount.hex, 18);
+        }
+        return "N/A";
+    };
 
 
     useEffect(() => {
@@ -124,114 +205,50 @@ const Dashboard = () => {
                         : (
                             <div className="w-full">
                                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                            <tr>
-                                                <th scope="col" className="px-6 py-3">
-                                                    Validator
-                                                </th>
-                                                <th scope="col" className="px-6 py-3">
-                                                    Stake
-                                                </th>
-                                                <th scope="col" className="px-6 py-3">
-                                                    Voting Power
-                                                </th>
-                                                <th scope="col" className="px-6 py-3">
-                                                    Commission
-                                                </th>
-                                                {/* <th scope="col" className="px-6 py-3">
-                            Action
-                          </th> */}
-                                                {/* <th scope="col" className="px-6 py-3">
-                            <span className="sr-only">Borrow</span>
-                          </th> */}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    nibiru-0
-                                                </th>
-                                                <td className="px-6 py-4">
-                                                    0.00
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div>
-                                                        <div className=" ">98,481,678,444 NIBI</div>
-                                                        <div className="text-sm text-gray-500">25.68%</div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    5%
-                                                </td>
-                                                {/* <td className="px-6 py-4 text-right">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Borrow</a>
-                          </td> */}
-                                            </tr>
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    nibiru-1
-                                                </th>
-                                                <td className="px-6 py-4">
-                                                    0.00
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div>
-                                                        <div className=" ">95,000,259,372 NIBI</div>
-                                                        <div className="text-sm text-gray-500">24.77%</div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    10%
-                                                </td>
-                                                {/* <td className="px-6 py-4 text-right">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Borrow</a>
-                          </td> */}
-                                            </tr>
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    nibiru-2
-                                                </th>
-                                                <td className="px-6 py-4">
-                                                    0.00
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div>
-                                                        <div className=" ">95,000,135,539 NIBI
-                                                        </div>
-                                                        <div className="text-sm text-gray-500">24.77%</div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    10%
-                                                </td>
-                                                {/* <td className="px-6 py-4 text-right">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Borrow</a>
-                          </td> */}
-                                            </tr>
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    nibiru-3
-                                                </th>
-                                                <td className="px-6 py-4">
-                                                    0.00
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div>
-                                                        <div className=" ">95,000,087,717 NIBI
-                                                        </div>
-                                                        <div className="text-sm text-gray-500">24.77%</div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    10%
-                                                </td>
-                                                {/* <td className="px-6 py-4 text-right">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Borrow</a>
-                          </td> */}
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                <tr>
+                                                    <th scope="col" className="px-6 py-3">Transaction Hash</th>
+                                                    <th scope="col" className="px-6 py-3">Type</th>
+                                                    <th scope="col" className="px-6 py-3">Data</th>
+                                                    <th scope="col" className="px-6 py-3">Block Number</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {transactions?.map((tx, index) => (
+                                                    <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                            {tx?.transactionHash.toString()}
+                                                        </th>
+                                                        <td className="px-6 py-4">
+                                                            {tx.type}
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            {tx.type === "OwnershipTransferred" && (
+                                                                <>
+                                                                    Previous Owner: {tx.previousOwner.substring(0, 10)}...<br />
+                                                                    New Owner: {tx.newOwner.substring(0, 10)}...
+                                                                </>
+                                                            )}
+                                                            {tx.type === "MemberJoined" && (
+                                                                <>Member: {tx.member.substring(0, 10)}...</>
+                                                            )}
+                                                            {tx.type === "Deposited" && (
+                                                                <>
+                                                                    Member: {tx.member.substring(0, 10)}...<br />
+                                                                    Amount: {formatAmount(tx.amount)} {tx.isNimbus ? "Nimbus" : "Collateral"}
+                                                                </>
+                                                            )}
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            {tx.blockNumber}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
 
                             </div>

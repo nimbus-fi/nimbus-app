@@ -6,7 +6,7 @@ import AssetsTable from '@/components/assets';
 
 export default function Home() {
   return (
-    <main className=" items-center p-32 my-10">
+    <main className="items-center p-32">
       <div className="hero-content text-black text-center">
         <div className="w-max">
           <div className="mb-5 text-5xl font-serif font-bold">Hey 👋, Welcome To Nimbus Fi
