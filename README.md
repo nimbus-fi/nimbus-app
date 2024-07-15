@@ -15,6 +15,29 @@ Nimbus Fi is a decentralized finance (DeFi) platform that enables users to form 
 | NIMBUS_TOKEN_ADDRESS               | `0x6Bbe2559Ea2fbB1634e343AabfFA6E5bAE2d9229` |
 | COLLATERAL_NIMBUS_TOKEN_ADDRESS    | `0xF312CAD90A6943b9718d3E73d0bf6f9D4b497f35` |
 
+
+## **🌐 Links**
+**Demo App:** [https://nimbusfi.vercel.app//](https://nimbusfi.vercel.app/)
+
+**Demo Video:**
+[![Demo Video](/public/images/n1.png)](https://drive.google.com/file/d/1xsKL-9qOuv-as5lWY0f7Cqsa86VWgM1j/view?usp=drive_link)
+
+## 📺 Screenshots (Current Web App)
+
+**Deposit/Borrow Page**
+![Image](/public/images/n3.png)
+
+**Assets Page**
+![Image](/public/images/n2.png)
+
+**Dashboard Page**
+![Image](/public/images/n5.png)
+
+**Governance Page**
+![Image](./public/images/n4.png)
+
+
+
 ## Key Features
 
 1. **Community-Based Credit Unions**
