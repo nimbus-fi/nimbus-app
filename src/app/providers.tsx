@@ -8,12 +8,9 @@ import {
     RainbowKitProvider,
     connectorsForWallets,
     getDefaultWallets,
+    Chain,
 } from '@rainbow-me/rainbowkit';
-import {
-    argentWallet,
-    trustWallet,
-    ledgerWallet,
-} from '@rainbow-me/rainbowkit/wallets';
+
 import { WagmiProvider } from 'wagmi';
 import {
     QueryClientProvider,
@@ -29,11 +26,30 @@ import {
 // import { publicProvider } from 'wagmi/providers/public';
 // import { alchemyProvider } from "wagmi/providers/alchemy";
 
+const ubit = {
+    id: 44433,
+    name: 'Ubit Testnet',
+    iconUrl: 'https://s2.coinmarketcap.com/static/img/coins/64x64/14914.png',
+    iconBackground: '#fff',
+    nativeCurrency: { name: 'USC', symbol: 'USC', decimals: 18 },
+    rpcUrls: {
+        default: { http: ['https://testnet-rpc.ubitscan.io/'] },
+    },
+    blockExplorers: {
+        default: { name: 'UBITscan', url: 'https://ubitscan.io/' },
+    },
+    contracts: {
+        multicall3: {
+            address: '0xca11bde05977b3631167028862be2a173976ca11',
+            blockCreated: 11_907_934,
+        },
+    },
+} as const satisfies Chain;
 
 const config = getDefaultConfig({
     appName: 'My RainbowKit App',
     projectId: 'YOUR_PROJECT_ID',
-    chains: [mainnet, sepolia, polygonMumbai],
+    chains: [ubit, sepolia],
     ssr: true, // If your dApp uses server side rendering (SSR)
 });
 
