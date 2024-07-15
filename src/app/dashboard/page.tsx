@@ -5,6 +5,10 @@ import { COMMUNITY_UNION_ADDRESS } from '@/lib/contract';
 import COMMUNITY_UNION from '@/lib/abi/CommunityUnion.json';
 import { ethers } from 'ethers';
 import TransactionTable from '@/components/TransactionTable';
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { getNimbusFinanceContract } from '@/lib/contract';
+
 
 interface Transaction {
     transactionHash: string;
@@ -33,9 +37,37 @@ const Dashboard = () => {
     const [borrow, setBorrow] = useState("0.2");
     const [lendPoints, setLendPoints] = useState("0");
     const [tokenTransaction, setTokenTransaction] = useState("2");
+    const [balance, setBalance] = useState("");
 
     const [transactions, setTransactions] = useState<Transaction[] | undefined>(undefined);
     const [loading, setLoading] = useState(false);
+
+    const getUserInfo = async () => {
+        if (address && isConnected) {
+
+            try {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const contract = getNimbusFinanceContract(provider);
+                const [etherBalance, nimbusBalance, borrowedAmount] = await contract.getUserInfo(address);
+                // etherBalance, nimbusBalance, borrowedAmount 
+
+                setBalance(ethers.utils.formatEther(etherBalance));
+                setLend(ethers.utils.formatEther(nimbusBalance));
+                setBorrow(ethers.utils.formatEther(borrowedAmount));
+
+
+            } catch (error) {
+                console.error("Error getting user info:", error);
+                toast.error("Error fetching user information");
+            }
+        }
+        else {
+            toast.error("Please connect your wallet");
+            return;
+
+        }
+    };
+
 
 
     useEffect(() => {
@@ -92,6 +124,7 @@ const Dashboard = () => {
             }
         };
 
+        getUserInfo();
         fetchEvents();
     }, [isConnected, address]);
 
@@ -123,7 +156,11 @@ const Dashboard = () => {
                         <h2 className="card-title"> Your Deposits  </h2>
                         <div className="p-5">
                             {isConnected ? (
-                                <div className="font-bold text-2xl "> {lend} UBIT</div>
+                                <div className='flex gap-10'>
+                                    <div className="font-bold text-2xl "> {balance} USC</div>
+                                    <div className="font-bold text-2xl "> {lend} NIBS</div>
+                                </div>
+
                             ) : (
                                 <div>
                                     <progress className="progress p-2 "></progress>
@@ -137,7 +174,7 @@ const Dashboard = () => {
                         <h2 className="card-title">Your Loans</h2>
                         <div className="p-5">
                             {isConnected ? (
-                                <div className="font-bold text-2xl "> {borrow} UBIT</div>
+                                <div className="font-bold text-2xl "> {borrow} USC</div>
                             ) : (
                                 <div>
                                     <progress className="progress p-2 "></progress>
