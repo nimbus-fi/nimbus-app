@@ -33,8 +33,8 @@ const Dashboard = () => {
     const { isConnected, address } = account;
 
     // create states for lend, borrow, lend points, lend ratio
-    const [lend, setLend] = useState("0.1");
-    const [borrow, setBorrow] = useState("0.2");
+    const [lend, setLend] = useState("0.0");
+    const [borrow, setBorrow] = useState("0.0");
     const [lendPoints, setLendPoints] = useState("0");
     const [tokenTransaction, setTokenTransaction] = useState("2");
     const [balance, setBalance] = useState("");
@@ -123,14 +123,18 @@ const Dashboard = () => {
                 }
             }
         };
-
         getUserInfo();
         fetchEvents();
-    }, [isConnected, address]);
+
+        if (isConnected && address) {
+            const points = calculateLendPoints();
+            setLendPoints(points);
+        }
+    }, [isConnected, address, lend, borrow, balance]);
 
 
     const calculateLendPoints = () => {
-        const lendPoint = (parseFloat(lend) + parseFloat(borrow)) * 2;
+        const lendPoint = (parseFloat(lend) + parseFloat(borrow) + parseFloat(balance)) * 2;
         return lendPoint.toString();
     }
 

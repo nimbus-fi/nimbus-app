@@ -248,7 +248,6 @@ export default function Funding() {
                                         >
                                             <option value="USC">USC ( Native Chain Token)</option>
                                             <option value="NIBS">NIBS (Nimbus Token)</option>
-                                            <option value="COLLATERAL">wNIBS (Collateral Token)</option>
                                             <option value="ETH">ETH (soon)</option>
                                             <option value="USDC">USDC (soon)</option>
                                         </select>
