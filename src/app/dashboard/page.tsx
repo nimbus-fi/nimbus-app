@@ -157,7 +157,7 @@ const Dashboard = () => {
             <div className="flex gap-5">
                 <div className="card shadow-xl w-[50%] bg-white rounded-3xl p-5">
                     <div className="card-body">
-                        <h2 className="card-title"> Your Deposits  </h2>
+                        <h2 className="card-title"> Your Lends  </h2>
                         <div className="p-5">
                             {isConnected ? (
                                 <div className='flex gap-10'>

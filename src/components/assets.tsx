@@ -41,7 +41,7 @@ const AssetsTable = () => {
                                         containerClassName="rounded-2xl"
                                         as="button"
                                         onClick={() => {
-                                            router.push("./fund/?state=deposit");
+                                            router.push("./fund/?state=lend");
                                         }}
                                         className="dark:bg-black bg-black text-white dark:text-white flex items-center space-x-2"
                                     >
@@ -91,7 +91,7 @@ const AssetsTable = () => {
                                         containerClassName="rounded-2xl"
                                         as="button"
                                         onClick={() => {
-                                            router.push("./fund/?state=deposit");
+                                            router.push("./fund/?state=lend");
                                         }}
                                         className="dark:bg-black bg-black text-white dark:text-white flex items-center space-x-2"
                                     >
@@ -141,7 +141,7 @@ const AssetsTable = () => {
                                         containerClassName="rounded-2xl"
                                         as="button"
                                         onClick={() => {
-                                            router.push("./fund/?state=deposit");
+                                            router.push("./fund/?state=lend");
                                         }}
                                         className="dark:bg-black bg-black text-white dark:text-white flex items-center space-x-2"
                                     >
@@ -203,7 +203,7 @@ const AssetsTable = () => {
                                         containerClassName="rounded-2xl"
                                         as="button"
                                         onClick={() => {
-                                            router.push("./fund/?state=deposit");
+                                            router.push("./fund/?state=lend");
                                         }}
                                         className="dark:bg-black bg-black text-white dark:text-white flex items-center space-x-2"
                                     >

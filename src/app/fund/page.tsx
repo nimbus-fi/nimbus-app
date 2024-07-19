@@ -15,7 +15,7 @@ export default function Funding() {
     const { address, isConnected } = useAccount();
     const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
 
-    const [open, setOpen] = useState<string>("deposit");
+    const [open, setOpen] = useState<string>("lend");
     const [amount, setAmount] = useState<string>("");
     const [asset, setAsset] = useState<string>("NIBS"); // default asset
     const [exchange, setExchange] = useState<string>("1");
@@ -23,7 +23,7 @@ export default function Funding() {
 
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search)
-        setOpen(searchParams.get("state") || "deposit");
+        setOpen(searchParams.get("state") || "lend");
         if (typeof window !== 'undefined' && window.ethereum) {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             setProvider(provider);
@@ -52,7 +52,7 @@ export default function Funding() {
         }
     };
 
-    const deposit = async (event: React.FormEvent, asset: string) => {
+    const lend = async (event: React.FormEvent, asset: string) => {
         event.preventDefault();
         if (!isConnected || !provider) {
             toast.error("Please connect your wallet");
@@ -65,10 +65,10 @@ export default function Funding() {
 
             let tx;
             if (asset === "EDU") {
-                // Deposit Ubit tokens
-                tx = await contract.depositEther({ value: amountWei });
+                // Lend Ubit tokens
+                tx = await contract.lendEther({ value: amountWei });
             } else {
-                // Deposit Nimbus tokens
+                // Lend Nimbus tokens
                 const tokenContract = new ethers.Contract(
                     NIMBUS_TOKEN_ADDRESS,
                     ['function approve(address spender, uint256 amount) returns (bool)'],
@@ -79,17 +79,17 @@ export default function Funding() {
                 const approveTx = await tokenContract.approve(contract.address, amountWei);
                 await approveTx.wait();
 
-                // Deposit Nimbus tokens
-                tx = await contract.depositNimbus(amountWei);
+                // Lend Nimbus tokens
+                tx = await contract.lendNimbus(amountWei);
             }
 
             await tx.wait();
 
-            toast.success(`${asset} deposit successful`);
+            toast.success(`${asset} lend successful`);
             setAmount("");
         } catch (error) {
-            console.error("Error depositing:", error);
-            toast.error("Error depositing. Please try again.");
+            console.error("Error lending:", error);
+            toast.error("Error lending. Please try again.");
         }
     };
 
@@ -198,7 +198,7 @@ export default function Funding() {
     };
 
     const handleSubmit = (event: React.FormEvent) => {
-        deposit(event, asset);
+        lend(event, asset);
     };
 
 
@@ -210,12 +210,12 @@ export default function Funding() {
                         <div
                             className={`w-1/2 py-4 px-1 md:px-4 text-sm font-semibold md:text-base lg:px-12 hover:underline-offset-8
                             rounded-2xl text-center transition-all delay-75 text-black focus:ring focus:ring-blue-400 cursor-pointer 
-                                ${open === "deposit"
+                                ${open === "lend"
                                     ? " bg-white drop-shadow-2xl text-black font-semibold"
                                     : " "
                                 }`}
                         >
-                            <button onClick={() => handleTabOpen("deposit")}>Deposit</button>
+                            <button onClick={() => handleTabOpen("lend")}>Lend</button>
                         </div>
 
                         <div
@@ -232,8 +232,8 @@ export default function Funding() {
                     </div>
                     <div className="divider divider-neutral mt-0"></div>
 
-                    {/* Deposit option */}
-                    {open === "deposit" && (
+                    {/* Lend option */}
+                    {open === "lend" && (
                         <div>
                             <form onSubmit={handleSubmit} className="w-full max-w-lg">
                                 <div className="my-4 ">
@@ -261,7 +261,7 @@ export default function Funding() {
                                         </div>
                                         <input
                                             type="text"
-                                            id="deposit-value"
+                                            id="lend-value"
                                             value={amount}
                                             onChange={priceHandler}
                                             className="input input-lg input-bordered"
@@ -283,7 +283,7 @@ export default function Funding() {
                                     type="submit"
                                     className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700"
                                 >
-                                    Deposit
+                                    Lend
                                 </button>
                             </form>
                         </div>

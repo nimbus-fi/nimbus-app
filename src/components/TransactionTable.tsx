@@ -57,7 +57,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ transactions }) => 
                                 {tx.type === "MemberJoined" && tx.member && (
                                     <>Member: {tx.member.substring(0, 10)}...</>
                                 )}
-                                {tx.type === "Deposited" && tx.member && tx.amount && (
+                                {tx.type === "Lended" && tx.member && tx.amount && (
                                     <>
                                         Member: {tx.member.substring(0, 10)}...<br />
                                         Amount: {formatAmount(tx.amount)} {tx.isNimbus ? "Nimbus" : "Collateral"}
