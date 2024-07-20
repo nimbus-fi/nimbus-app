@@ -12,7 +12,7 @@ export default function Home() {
           <div className="mb-5 text-5xl font-serif font-bold">Hey 👋, Welcome To Nimbus Fi
           </div>
           <div className="mb-5 text-xl">
-            A decentralized platform enabling users to form community-based credit unions for lending and borrowing at preferential rates.
+            A decentralized platform enabling users to stake, lend, borrow and invest into yeild vaults.
           </div>
           <div className='py-5'>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

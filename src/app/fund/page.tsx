@@ -65,7 +65,7 @@ export default function Funding() {
 
             let tx;
             if (asset === "EDU") {
-                // Lend Ubit tokens
+                // Lend EDU tokens
                 tx = await contract.lendEther({ value: amountWei });
             } else {
                 // Lend Nimbus tokens

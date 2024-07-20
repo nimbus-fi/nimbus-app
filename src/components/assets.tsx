@@ -68,7 +68,7 @@ const AssetsTable = () => {
                     <div className="flex p-5 justify-between items-center">
                         <div className="flex flex-row items-center gap-2">
                             <CiDollar className="bg-yellow-300 rounded-xl text-xl" />
-                            <h2 className="text-left text-lg font-semibold ">UBIT</h2>
+                            <h2 className="text-left text-lg font-semibold ">EDU</h2>
                         </div>{" "}
                         <div className="flex flex-row gap-4">
                             <div className="flex items-center justify-center">

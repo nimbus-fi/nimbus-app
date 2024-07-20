@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 export default function Votelist() {
     const [votes, setVotes] = useState([
-        { id: 1, collateral: 'UBIT', status: 'active', debtCeiling: '1M', utilization: '50%', apy: '2%', bribes: '10 ETH', voteCount: 100, badDebt: 0 },
+        { id: 1, collateral: 'EDU', status: 'active', debtCeiling: '1M', utilization: '50%', apy: '2%', bribes: '10 ETH', voteCount: 100, badDebt: 0 },
         { id: 2, collateral: 'ETH', status: 'active', debtCeiling: '2M', utilization: '75%', apy: '4%', bribes: '5 ETH', voteCount: 50, badDebt: 0 },
         {
             id: 3,
