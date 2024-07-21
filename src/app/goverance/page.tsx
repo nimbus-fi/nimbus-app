@@ -91,7 +91,7 @@ const Governance: React.FC = () => {
 
             toast(
                 <div>
-                    Link - {`https://testnet.eduscan.io/tx/${tx.hash}`}
+                    Link - {`https://opencampus-codex.blockscout.com/tx/${tx.hash}`}
                 </div>
             );
 
@@ -125,7 +125,7 @@ const Governance: React.FC = () => {
 
             toast(
                 <div>
-                    Link - {`https://testnet.eduscan.io/tx/${tx.hash}`}
+                    Link - {`https://opencampus-codex.blockscout.com/tx/${tx.hash}`}
                 </div>
             );
 
@@ -157,7 +157,7 @@ const Governance: React.FC = () => {
 
             toast(
                 <div>
-                    Link - {`https://testnet.eduscan.io/tx/${tx.hash}`}
+                    Link - {`https://opencampus-codex.blockscout.com/tx/${tx.hash}`}
                 </div>
             );
 
