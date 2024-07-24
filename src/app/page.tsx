@@ -6,13 +6,13 @@ import AssetsTable from '@/components/assets';
 
 export default function Home() {
   return (
-    <main className="items-center p-32">
+    <main className="justify-between p-32">
       <div className="hero-content text-black text-center">
-        <div className="w-max">
+        <div className="flex flex-col w-max">
           <div className="mb-5 text-5xl font-serif font-bold">Hey 👋, Welcome To Nimbus Fi
           </div>
           <div className="mb-5 text-xl">
-            A decentralized platform enabling users to stake, lend, borrow and invest into yeild vaults.
+            A decentralized platform enabling users to stake, lend, borrow and invest into yeild vaults on <b>EDU Chain</b>.
           </div>
           <div className='py-5'>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

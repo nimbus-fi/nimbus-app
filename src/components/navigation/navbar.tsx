@@ -69,11 +69,30 @@ export default function Navbar() {
 					<div
 						className={style.headerItem}
 						onClick={() => {
-							router.push("/fund");
+							router.push("/stake");
+						}}
+					>
+						Stake
+					</div>
+
+					<div
+						className={style.headerItem}
+						onClick={() => {
+							router.push("/loan");
 						}}
 					>
 						Lend/Borrow
 					</div>
+
+					<div
+						className={style.headerItem}
+						onClick={() => {
+							router.push("/vaults");
+						}}
+					>
+						Yield Vaults
+					</div>
+
 					<div
 						className={style.headerItem}
 						onClick={() => {
