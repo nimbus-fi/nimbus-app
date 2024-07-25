@@ -10,6 +10,7 @@ import ERC20 from '@/lib/abi/MyToken.json';
 import { getCommunityUnionContract, getNimbusFinanceContract } from '@/lib/contract';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import AssetsTable from '@/components/assets';
 
 export default function Funding() {
     const { address, isConnected } = useAccount();
@@ -339,6 +340,9 @@ export default function Funding() {
                         </div>
                     )}
                 </div>
+            </div>
+            <div className="flex flex-col justify-between px-28 py-16">
+                <AssetsTable />
             </div>
             <ToastContainer />
         </main>
