@@ -18,7 +18,7 @@ export default function Funding() {
 
     const [open, setOpen] = useState<string>("lend");
     const [amount, setAmount] = useState<string>("");
-    const [asset, setAsset] = useState<string>("NIBS"); // default asset
+    const [asset, setAsset] = useState<string>("EDU"); // default asset
     const [exchange, setExchange] = useState<string>("1");
     const [isNimbusToken, setIsNimbusToken] = useState<boolean>(true);
 
@@ -67,7 +67,7 @@ export default function Funding() {
             let tx;
             if (asset === "EDU") {
                 // Lend EDU tokens
-                tx = await contract.lendEther({ value: amountWei });
+                tx = await contract.depositEther({ value: amountWei });
             } else {
                 // Lend Nimbus tokens
                 const tokenContract = new ethers.Contract(
