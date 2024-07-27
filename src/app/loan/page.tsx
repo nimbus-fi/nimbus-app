@@ -10,7 +10,7 @@ import ERC20 from '@/lib/abi/MyToken.json';
 import { getCommunityUnionContract, getNimbusFinanceContract } from '@/lib/contract';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import AssetsTable from '@/components/assets';
+import AssetsTable from "@/components/AssetsLoan";
 
 export default function Funding() {
     const { address, isConnected } = useAccount();
@@ -165,7 +165,6 @@ export default function Funding() {
         }
     };
 
-
     const repay = async (amount: string) => {
         if (!isConnected || !provider) {
             toast.error("Please connect your wallet");
@@ -205,6 +204,10 @@ export default function Funding() {
 
     return (
         <main className="flex flex-row justify-center align-middle py-5 ">
+            <div className="flex flex-col justify-between px-28 py-16">
+                <AssetsTable />
+            </div>
+
             <div className="card my-5 bg-base-200 shadow-xl w-[600px] px-10 py-5">
                 <div className=" p-4 justify-between items-center">
                     <div className="flex flex-row w-full items-center gap-4">
@@ -341,9 +344,7 @@ export default function Funding() {
                     )}
                 </div>
             </div>
-            <div className="flex flex-col justify-between px-28 py-16">
-                <AssetsTable />
-            </div>
+
             <ToastContainer />
         </main>
     );
