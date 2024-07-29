@@ -8,6 +8,8 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { FaFaucetDrip } from "react-icons/fa6";
+
 
 
 const style = {
@@ -103,7 +105,14 @@ export default function Navbar() {
 					</div>
 				</div>
 			</div>
-			<div className="flex md:order-2 space-x-1 md:space-x-0">
+			<div className="flex gap-4 md:order-2 space-x-1 md:space-x-0">
+				<div className="py-2">
+					<Link href="/faucet">
+						<FaFaucetDrip className="text-2xl"/>
+					</Link>
+				</div>
+
+
 				<ConnectButton />
 			</div>
 
