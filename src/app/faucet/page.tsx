@@ -19,38 +19,6 @@ const Faucet: React.FC = () => {
         return new ethers.Contract(NIMBUS_TOKEN_ADDRESS, NimbusABI.abi, provider.getSigner());
     };
 
-    const vote = async (proposalId: number, support: boolean) => {
-        setLoading(true);
-        try {
-            const contract = getGovernanceContract();
-            console.log("Voting on proposal:", proposalId, support);
-            const tx = await contract.vote(proposalId, support);
-            console.log("Transaction sent:", tx.hash);
-            const receipt = await tx.wait();
-            console.log("Transaction confirmed:", receipt);
-            toast.success("Voted Successfully!");
-
-            toast(
-                <div>
-                    Link - {`https://opencampus-codex.blockscout.com/tx/${tx.hash}`}
-                </div>
-            );
-
-            await fetchProposals();
-        } catch (error) {
-            console.error("Error voting:", error);
-            toast.error("Failed to vote!");
-
-            toast(
-                <div>
-                    {(error as any)?.reason || "Unknown error occurred"}
-                </div>
-            );
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const executeProposal = async () => {
         setLoading(true);
         try {
