@@ -35,7 +35,7 @@ const Faucet: React.FC = () => {
                 </div>
             );
         } catch (error) {
-            console.error("Error executing proposal:", error);
+            console.error("Error:", error);
             toast.error("Failed to get tokens!");
 
             toast(
@@ -65,7 +65,7 @@ const Faucet: React.FC = () => {
             <div className="bg-white p-6 rounded-xl shadow-xl ">
                 <div className="bg-white p-6 rounded-xl ">
                     <h2 className="text-2xl font-semibold mb-4">Get 10 NIBS token for testing</h2>
-                    <button onClick={executeProposal}> Get Token</button>
+                    <button className='bg-black py-4 px-6 text-white font-bold rounded-md' onClick={executeProposal}> Get Token</button>
                 </div>
             </div>
 
