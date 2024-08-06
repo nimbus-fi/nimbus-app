@@ -10,7 +10,7 @@ const AssetsLoanTable = () => {
     return (
         <div>
             <div className="text-[30px] font-bold pb-5 text-center">Assets</div>
-            <div className="py-4 ">
+            <div className="py-4 w-[300px]">
                 {/* creating token cards */}
                 <div className="card w-full my-5 bg-gray-100 shadow-xl">
                     <div className="flex p-5 justify-between items-center">
