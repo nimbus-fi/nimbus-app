@@ -18,9 +18,10 @@ export default function Stake() {
     const [open, setOpen] = useState<string>("lend");
     const [amount, setAmount] = useState<string>("");
     const [asset, setAsset] = useState<string>("EDU"); // default asset
+    const [unstakeAmount, setUnstakeAmount] = useState<string>("0");
     const [exchange, setExchange] = useState<string>("1");
     const [isNimbusToken, setIsNimbusToken] = useState<boolean>(true);
-    const [ apy, setApy] = useState<string>("30");
+    const [apy, setApy] = useState<string>("30");
 
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search)
@@ -37,6 +38,11 @@ export default function Stake() {
 
     const priceHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setAmount(e.target.value);
+    };
+
+    const unstakeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        setUnstakeAmount(event.target.value);
+        console.log("unstake amount", unstakeAmount);
     };
 
     const getTokenAddress = (asset: string) => {
@@ -281,6 +287,15 @@ export default function Stake() {
                                 <div className="text-sm">
                                     <div className="my-2">
                                         <div className="flex items-center justify-between">
+                                            <div className="">Exchange Rate</div>
+                                            <div>1 {asset} = {exchange} stEDU</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="text-sm">
+                                    <div className="my-2">
+                                        <div className="flex items-center justify-between">
                                             <div className="">Rewards Rate</div>
                                             <div> {apy}% APY</div>
                                         </div>
@@ -291,13 +306,59 @@ export default function Stake() {
                                     type="submit"
                                     className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700"
                                 >
-                                    Lend
+                                    Stake
                                 </button>
                             </form>
                         </div>
                     )}
 
-               
+                    {/* unstake option */}
+                    {open === "unstake" && (
+                        <div>
+                            <form onSubmit={borrow} className="w-full max-w-lg">
+                                <div className="my-4">
+                                    <label className="form-control w-full">
+                                        <div className="label">
+                                            <div>Select the Asset</div>
+                                        </div>
+                                        <select
+                                            className="select select-bordered"
+                                            value={asset}
+                                            onChange={(e) => setAsset(e.target.value)}
+                                        >
+                                            <option value="EDU">EDU ( Native Chain Token)</option>
+                                        </select>
+                                    </label>
+                                </div>
+
+                                <div className="my-6">
+                                    <label className="form-control w-full">
+                                        <div className="label">
+                                            <div className="my-2">Enter Amount</div>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            id="unstake-value"
+                                            defaultValue={unstakeAmount}
+                                            onChange={unstakeHandler}
+                                            className="input input-lg input-bordered"
+                                            placeholder="0"
+                                            required
+                                        />
+                                    </label>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700"
+                                >
+                                    Unstake
+                                </button>
+                            </form>
+                        </div>
+                    )}
+
+
                 </div>
             </div>
 
