@@ -348,6 +348,23 @@ export default function Stake() {
                                     </label>
                                 </div>
 
+                                <div className="text-sm">
+                                    {/* <div className="my-1 border-t border-gray-300"></div> */}
+                                    <div className="">
+                                        <div className="flex items-center justify-between">
+                                            <div className="">You wil get</div>
+                                            <div>{amount} EDU</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="my-2">
+                                        <div className="flex items-center justify-between">
+                                            <div className="">Exchange Rate</div>
+                                            <div>1 stEDU = {exchange} EDU</div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <button
                                     type="submit"
                                     className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700"
