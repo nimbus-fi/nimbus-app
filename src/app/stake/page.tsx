@@ -15,10 +15,14 @@ export default function Stake() {
     const { address, isConnected } = useAccount();
     const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
 
-    const [open, setOpen] = useState<string>("lend");
+    const [open, setOpen] = useState<string>("stake"); // unstake, withdraw
     const [amount, setAmount] = useState<string>("");
     const [asset, setAsset] = useState<string>("EDU"); // default asset
     const [unstakeAmount, setUnstakeAmount] = useState<string>("0");
+    const [unstakeStatus, setUnstakeStatus] = useState(true);
+    const [withdrawAmount, setWithdrawAmount] = useState<string>("1");
+    const [termsAccepted, setTermsAccepted] = useState<boolean>(false);
+
     const [exchange, setExchange] = useState<string>("1");
     const [isNimbusToken, setIsNimbusToken] = useState<boolean>(true);
     const [apy, setApy] = useState<string>("30");
@@ -43,6 +47,10 @@ export default function Stake() {
     const unstakeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setUnstakeAmount(event.target.value);
         console.log("unstake amount", unstakeAmount);
+    };
+
+    const termsHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        setTermsAccepted(event.target.checked);
     };
 
     const getTokenAddress = (asset: string) => {
@@ -375,6 +383,91 @@ export default function Stake() {
                         </div>
                     )}
 
+                    {/* withdraw option */}
+                    {open === "withdraw" && (
+                        <div>
+                            <div role="alert" className="mt-3 alert alert-warning">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6 shrink-0 stroke-current"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                                    />
+                                </svg>
+                                <span>
+                                    Unstake requests are processed in 7-10 days, subject to exit
+                                    queue on Network
+                                </span>
+                            </div>
+
+                            {!unstakeStatus ? (
+                                <div>
+                                    <div className="flex flex-col align-middle justify-center my-8 py-8 p-5 bg-white rounded-3xl ">
+                                        <div className="py-5 text-center text-3xl font-semibold">
+                                            No unstake requests found
+                                        </div>
+                                        <div className="py-5 text-center ">
+                                            You will be able to claim your tokens after the Unstake
+                                            request has been processed. To Unstake your tokens go to
+                                            Unstake tab
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div>
+                                    <form onSubmit={withdraw} className="w-full max-w-lg">
+                                        <div className="my-4">
+                                            <label className="form-control w-full">
+                                                <div className="label">
+                                                    <div className="font-bold text-2xl pt-5">
+                                                        Withdraw amount available
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div className="my-6">
+                                            <label className="form-control w-full">
+                                                <div className="input input-lg input-bordered">
+                                                    <div className="flex align-middle justify-between text-center pt-2 ">
+                                                        {withdrawAmount} NIBI
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div className="flex items-center mb-6">
+                                            <input
+                                                type="checkbox"
+                                                id="terms"
+                                                checked={termsAccepted}
+                                                onChange={termsHandler}
+                                                className="mr-2"
+                                            />
+                                            <label
+                                                htmlFor="terms"
+                                                className="text-lg font-semibold text-black dark:text-white"
+                                            >
+                                                I want to withdraw all available amount
+                                            </label>
+                                        </div>
+
+                                        <button
+                                            type="submit"
+                                            className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700">
+                                            Withdraw
+                                        </button>
+                                    </form>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                 </div>
             </div>
