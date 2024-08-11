@@ -72,7 +72,7 @@ export default function Navbar() {
 							router.push("/stake");
 						}}
 					>
-						Stake
+						Staking
 					</div>
 
 					<div

@@ -218,13 +218,13 @@ export default function Stake() {
 
     return (
         <main className="flex flex-row justify-center align-middle py-5 ">
-            <div className="card my-5 bg-base-200 shadow-xl w-[600px] px-10 py-5">
+            <div className="card my-5 bg-gray-100 shadow-xl w-[600px] px-10 py-5">
                 <div className=" p-4 justify-between items-center">
                     <div className="flex flex-wrap">
                         <div
                             className={`w-1/3 py-4 px-1 md:px-4 text- md:text-base lg:px-12 hover:underline-offset-8
                                     rounded-2xl text-center transition-all delay-75 text-black focus:ring focus:ring-blue-400 cursor-pointer ${open === "stake"
-                                    ? "bg-purple-100 drop-shadow-xl text-black font-semibold"
+                                    ? "bg-white drop-shadow-xl text-black font-semibold"
                                     : " "
                                 }`}
                         >
@@ -234,7 +234,7 @@ export default function Stake() {
                         <div
                             className={`w-1/3 py-4 px-1 md:px-4 text- md:text-base lg:px-12 hover:underline-offset-8
                                     rounded-2xl text-center transition-all delay-75 text-black focus:ring focus:ring-blue-400 cursor-pointer ${open === "unstake"
-                                    ? "bg-purple-200 drop-shadow-xl text-black font-semibold"
+                                    ? "bg-white drop-shadow-xl text-black font-semibold"
                                     : " "
                                 }`}
                         >
@@ -246,7 +246,7 @@ export default function Stake() {
                         <div
                             className={`w-1/3 py-4 px-1 md:px-4 text- md:text-base lg:px-12 hover:underline-offset-8
                                     rounded-2xl text-center transition-all delay-75 text-black focus:ring focus:ring-blue-400 cursor-pointer ${open === "withdraw"
-                                    ? "bg-purple-200 drop-shadow-xl text-black font-semibold"
+                                    ? "bg-white drop-shadow-xl text-black font-semibold"
                                     : " "
                                 }`}
                         >
@@ -436,7 +436,7 @@ export default function Stake() {
                                             <label className="form-control w-full">
                                                 <div className="input input-lg input-bordered">
                                                     <div className="flex align-middle justify-between text-center pt-2 ">
-                                                        {withdrawAmount} NIBI
+                                                        {withdrawAmount} EDU
                                                     </div>
                                                 </div>
                                             </label>

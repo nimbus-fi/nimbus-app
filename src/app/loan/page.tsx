@@ -10,9 +10,9 @@ import ERC20 from '@/lib/abi/MyToken.json';
 import { getCommunityUnionContract, getNimbusFinanceContract } from '@/lib/contract';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import AssetsTable from "@/components/AssetsLoan";
+import AssetsTable from "@/components/Assets";
 
-export default function Loan() {
+export default function Funding() {
     const { address, isConnected } = useAccount();
     const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
 
@@ -203,145 +203,148 @@ export default function Loan() {
 
 
     return (
-        <main className="flex flex-col justify-center align-middle py-5 ">
+        <main className="justify-between py-5 ">
 
-            <div className="card my-5 bg-base-200 shadow-xl w-[600px] px-10 py-5">
-                <div className=" p-4 justify-between items-center">
-                    <div className="flex flex-row w-full items-center gap-4">
-                        <div
-                            className={`w-1/2 py-4 px-1 md:px-4 text-sm font-semibold md:text-base lg:px-12 hover:underline-offset-8
+            <div className="flex flex-row justify-center align-middle ">
+                <div className="card my-5 bg-gray-100 dark:bg-gray-800  shadow-xl w-[600px] px-10 py-5">
+                    <div className=" p-4 justify-between items-center">
+                        <div className="flex flex-row w-full items-center gap-4">
+                            <div
+                                className={`w-1/2 py-4 px-1 md:px-4 text-sm font-semibold md:text-base lg:px-12 hover:underline-offset-8
                             rounded-2xl text-center transition-all delay-75 text-black focus:ring focus:ring-blue-400 cursor-pointer 
                                 ${open === "lend"
-                                    ? " bg-white drop-shadow-2xl text-black font-semibold"
-                                    : " "
-                                }`}
-                        >
-                            <button onClick={() => handleTabOpen("lend")}>Lend</button>
-                        </div>
+                                        ? " bg-white drop-shadow-2xl text-black font-semibold"
+                                        : " "
+                                    }`}
+                            >
+                                <button onClick={() => handleTabOpen("lend")}>Lend</button>
+                            </div>
 
-                        <div
-                            className={`w-1/2 py-4 px-4 text-sm md:text-base lg:px-12 hover:underline-offset-8
+                            <div
+                                className={`w-1/2 py-4 px-4 text-sm md:text-base lg:px-12 hover:underline-offset-8
                             text-center rounded-2xl transition-all delay-75 text-black  cursor-pointer ${open === "borrow"
-                                    ? " bg-white drop-shadow-2xl text-black font-semibold "
-                                    : " "
-                                }`}
-                        >
-                            <button onClick={() => handleTabOpen("borrow")}>
-                                Borrow
-                            </button>
-                        </div>
-                    </div>
-                    <div className="divider divider-neutral mt-0"></div>
-
-                    {/* Lend option */}
-                    {open === "lend" && (
-                        <div>
-                            <form onSubmit={handleSubmit} className="w-full max-w-lg">
-                                <div className="my-4 ">
-                                    <label className="form-control w-full">
-                                        <div className="label">
-                                            <div className="">Select the Asset</div>
-                                        </div>
-                                        <select
-                                            className="select select-bordered"
-                                            value={asset}
-                                            onChange={(e) => setAsset(e.target.value)}
-                                        >
-                                            <option value="EDU">EDU ( Native Chain Token)</option>
-                                            <option value="NIBS">NIBS (Nimbus Token)</option>
-                                            <option value="ETH">ETH (soon)</option>
-                                            <option value="USDC">USDC (soon)</option>
-                                        </select>
-                                    </label>
-                                </div>
-
-                                <div className="my-6">
-                                    <label className="form-control w-full">
-                                        <div className="label">
-                                            <div className="my-2">Enter Amount</div>
-                                        </div>
-                                        <input
-                                            type="text"
-                                            id="lend-value"
-                                            value={amount}
-                                            onChange={priceHandler}
-                                            className="input input-lg input-bordered"
-                                            placeholder="0"
-                                            required
-                                        />
-                                    </label>
-                                </div>
-                                <div className="text-sm">
-                                    <div className="my-2">
-                                        <div className="flex items-center justify-between">
-                                            <div className="">Exchange Rate</div>
-                                            <div>1 {asset} = {exchange} wNIBS</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700"
-                                >
-                                    Lend
-                                </button>
-                            </form>
-                        </div>
-                    )}
-
-                    {/* Borrow option */}
-                    {open === "borrow" && (
-                        <div>
-                            <form onSubmit={borrow} className="w-full max-w-lg">
-                                <div className="my-4">
-                                    <label className="form-control w-full">
-                                        <div className="label">
-                                            <div>Select the Asset</div>
-                                        </div>
-                                        <select
-                                            className="select select-bordered"
-                                            value={asset}
-                                            onChange={(e) => setAsset(e.target.value)}
-                                        >
-                                            <option value="EDU">EDU ( Native Chain Token)</option>
-                                            <option value="NIBS">NIBS (Nimbus Token)</option>
-                                            <option value="COLLATERAL">wNIBS (Collateral Token)</option>
-                                            <option value="ETH">ETH (soon)</option>
-                                            <option value="USDC">USDC (soon)</option>
-                                        </select>
-                                    </label>
-                                </div>
-
-                                <div className="my-6">
-                                    <label className="form-control w-full">
-                                        <div className="label">
-                                            <div className="my-2">Enter Amount</div>
-                                        </div>
-                                        <input
-                                            type="text"
-                                            id="borrow-value"
-                                            value={amount}
-                                            onChange={priceHandler}
-                                            className="input input-lg input-bordered"
-                                            placeholder="0"
-                                            required
-                                        />
-                                    </label>
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700"
-                                >
+                                        ? " bg-white drop-shadow-2xl text-black font-semibold "
+                                        : " "
+                                    }`}
+                            >
+                                <button onClick={() => handleTabOpen("borrow")}>
                                     Borrow
                                 </button>
-                            </form>
+                            </div>
                         </div>
-                    )}
+                        <div className="divider divider-neutral mt-0"></div>
+
+                        {/* Lend option */}
+                        {open === "lend" && (
+                            <div>
+                                <form onSubmit={handleSubmit} className="w-full max-w-lg">
+                                    <div className="my-4 ">
+                                        <label className="form-control w-full">
+                                            <div className="label">
+                                                <div className="">Select the Asset</div>
+                                            </div>
+                                            <select
+                                                className="select select-bordered"
+                                                value={asset}
+                                                onChange={(e) => setAsset(e.target.value)}
+                                            >
+                                                <option value="EDU">EDU ( Native Chain Token)</option>
+                                                <option value="NIBS">NIBS (Nimbus Token)</option>
+                                                <option value="ETH">ETH (soon)</option>
+                                                <option value="USDC">USDC (soon)</option>
+                                            </select>
+                                        </label>
+                                    </div>
+
+                                    <div className="my-6">
+                                        <label className="form-control w-full">
+                                            <div className="label">
+                                                <div className="my-2">Enter Amount</div>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="lend-value"
+                                                value={amount}
+                                                onChange={priceHandler}
+                                                className="input input-lg input-bordered"
+                                                placeholder="0"
+                                                required
+                                            />
+                                        </label>
+                                    </div>
+                                    <div className="text-sm">
+                                        <div className="my-2">
+                                            <div className="flex items-center justify-between">
+                                                <div className="">Exchange Rate</div>
+                                                <div>1 {asset} = {exchange} wNIBS</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700"
+                                    >
+                                        Lend
+                                    </button>
+                                </form>
+                            </div>
+                        )}
+
+                        {/* Borrow option */}
+                        {open === "borrow" && (
+                            <div>
+                                <form onSubmit={borrow} className="w-full max-w-lg">
+                                    <div className="my-4">
+                                        <label className="form-control w-full">
+                                            <div className="label">
+                                                <div>Select the Asset</div>
+                                            </div>
+                                            <select
+                                                className="select select-bordered"
+                                                value={asset}
+                                                onChange={(e) => setAsset(e.target.value)}
+                                            >
+                                                <option value="EDU">EDU ( Native Chain Token)</option>
+                                                <option value="NIBS">NIBS (Nimbus Token)</option>
+                                                <option value="COLLATERAL">wNIBS (Collateral Token)</option>
+                                                <option value="ETH">ETH (soon)</option>
+                                                <option value="USDC">USDC (soon)</option>
+                                            </select>
+                                        </label>
+                                    </div>
+
+                                    <div className="my-6">
+                                        <label className="form-control w-full">
+                                            <div className="label">
+                                                <div className="my-2">Enter Amount</div>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="borrow-value"
+                                                value={amount}
+                                                onChange={priceHandler}
+                                                className="input input-lg input-bordered"
+                                                placeholder="0"
+                                                required
+                                            />
+                                        </label>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700"
+                                    >
+                                        Borrow
+                                    </button>
+                                </form>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
-            <div className="flex flex-col justify-between px-28 py-16">
+
+            <div className="flex flex-col justify-center align-middle px-28 py-16 ">
                 <AssetsTable />
             </div>
             <ToastContainer />
