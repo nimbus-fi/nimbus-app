@@ -35,6 +35,10 @@ const Dashboard = () => {
     // create states for lend, borrow, lend points, lend ratio
     const [lend, setLend] = useState("0.0");
     const [borrow, setBorrow] = useState("0.0");
+    const [stakes, setStakes] = useState("0.0");
+    const [ vaultAmount, setVaultAmount] = useState("0.0");
+    const [ vaultYield, setVaultYield] = useState("0.0");
+
     const [lendPoints, setLendPoints] = useState("0");
     const [tokenTransaction, setTokenTransaction] = useState("2");
     const [balance, setBalance] = useState("");
@@ -154,7 +158,41 @@ const Dashboard = () => {
     return (
         <div className="flex flex-col justify-between px-28 py-16">
             <div className="pb-5 text-[30px] font-bold ">Dashboard</div>
-            <div className="flex gap-5">
+            <div className="flex gap-5 my-5">
+                <div className="card shadow-xl w-[50%] bg-white rounded-3xl p-5">
+                    <div className="card-body">
+                        <h2 className="card-title"> Your Stake  </h2>
+                        <div className="p-5">
+                            {isConnected ? (
+                                <div className='flex gap-10'>
+                                    <div className="font-bold text-2xl "> {stakes } EDU</div>
+                                    <div className="font-bold text-2xl "> {lend} NIBS</div>
+                                </div>
+
+                            ) : (
+                                <div>
+                                    <progress className="progress p-2 "></progress>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                <div className="card shadow-xl w-[50%] bg-white rounded-3xl p-5">
+                    <div className="card-body">
+                        <h2 className="card-title">Your Vaults</h2>
+                        <div className="p-5">
+                            {isConnected ? (
+                                <div className="font-bold text-2xl "> {vaultAmount} </div>
+                            ) : (
+                                <div>
+                                    <progress className="progress p-2 "></progress>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex gap-5 my-5">
                 <div className="card shadow-xl w-[50%] bg-white rounded-3xl p-5">
                     <div className="card-body">
                         <h2 className="card-title"> Your Lends  </h2>
@@ -175,7 +213,7 @@ const Dashboard = () => {
                 </div>
                 <div className="card shadow-xl w-[50%] bg-white rounded-3xl p-5">
                     <div className="card-body">
-                        <h2 className="card-title">Your Loans</h2>
+                        <h2 className="card-title">Your Borrows</h2>
                         <div className="p-5">
                             {isConnected ? (
                                 <div className="font-bold text-2xl "> {borrow} USC</div>
