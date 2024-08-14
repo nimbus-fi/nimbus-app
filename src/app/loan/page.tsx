@@ -24,7 +24,7 @@ export default function Funding() {
 
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search)
-        setOpen(searchParams.get("state") || "lend");
+        setOpen(searchParams.get("borrow") || "lend");
         if (typeof window !== 'undefined' && window.ethereum) {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             setProvider(provider);

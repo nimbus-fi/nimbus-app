@@ -25,11 +25,11 @@ export default function Stake() {
 
     const [exchange, setExchange] = useState<string>("1");
     const [isNimbusToken, setIsNimbusToken] = useState<boolean>(true);
-    const [apy, setApy] = useState<string>("30");
+    const [apy, setApy] = useState<string>("5");
 
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search)
-        setOpen(searchParams.get("state") || "lend");
+        setOpen(searchParams.get("state") || "stake");
         if (typeof window !== 'undefined' && window.ethereum) {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             setProvider(provider);
@@ -223,7 +223,8 @@ export default function Stake() {
                     <div className="flex flex-wrap">
                         <div
                             className={`w-1/3 py-4 px-1 md:px-4 text- md:text-base lg:px-12 hover:underline-offset-8
-                                    rounded-2xl text-center transition-all delay-75 text-black focus:ring focus:ring-blue-400 cursor-pointer ${open === "stake"
+                                    rounded-2xl text-center transition-all delay-75 text-black focus:ring focus:ring-blue-400 cursor-pointer 
+                                    ${open === "stake"
                                     ? "bg-white drop-shadow-xl text-black font-semibold"
                                     : " "
                                 }`}
@@ -233,7 +234,8 @@ export default function Stake() {
 
                         <div
                             className={`w-1/3 py-4 px-1 md:px-4 text- md:text-base lg:px-12 hover:underline-offset-8
-                                    rounded-2xl text-center transition-all delay-75 text-black focus:ring focus:ring-blue-400 cursor-pointer ${open === "unstake"
+                                    rounded-2xl text-center transition-all delay-75 text-black focus:ring focus:ring-blue-400 cursor-pointer 
+                                    ${open === "unstake"
                                     ? "bg-white drop-shadow-xl text-black font-semibold"
                                     : " "
                                 }`}
@@ -251,7 +253,7 @@ export default function Stake() {
                                 }`}
                         >
                             <button onClick={() => handleTabOpen("withdraw")}>
-                                Withdraw
+                                Rewards
                             </button>
                         </div>
                     </div>
@@ -401,8 +403,7 @@ export default function Stake() {
                                     />
                                 </svg>
                                 <span>
-                                    Unstake requests are processed in 7-10 days, subject to exit
-                                    queue on Network
+                                    Reward requests are subject to last exit queue on the Network.
                                 </span>
                             </div>
 
@@ -413,7 +414,7 @@ export default function Stake() {
                                             No unstake requests found
                                         </div>
                                         <div className="py-5 text-center ">
-                                            You will be able to claim your tokens after the Unstake
+                                            You will be able to claim your rewards tokens after the Unstake
                                             request has been processed. To Unstake your tokens go to
                                             Unstake tab
                                         </div>
@@ -426,7 +427,7 @@ export default function Stake() {
                                             <label className="form-control w-full">
                                                 <div className="label">
                                                     <div className="font-bold text-2xl pt-5">
-                                                        Withdraw amount available
+                                                        Rewards amount available
                                                     </div>
                                                 </div>
                                             </label>
@@ -436,7 +437,7 @@ export default function Stake() {
                                             <label className="form-control w-full">
                                                 <div className="input input-lg input-bordered">
                                                     <div className="flex align-middle justify-between text-center pt-2 ">
-                                                        {withdrawAmount} EDU
+                                                        {withdrawAmount} NIBS
                                                     </div>
                                                 </div>
                                             </label>
@@ -454,7 +455,7 @@ export default function Stake() {
                                                 htmlFor="terms"
                                                 className="text-lg font-semibold text-black dark:text-white"
                                             >
-                                                I want to withdraw all available amount
+                                                I want to withdraw all my rewards token
                                             </label>
                                         </div>
 
