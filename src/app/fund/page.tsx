@@ -64,7 +64,7 @@ export default function Funding() {
             const amountWei = ethers.utils.parseEther(amount);
 
             let tx;
-            if (asset === "USC") {
+            if (asset === "EDU") {
                 // Deposit Ubit tokens
                 tx = await contract.depositEther({ value: amountWei });
             } else {
@@ -236,17 +236,17 @@ export default function Funding() {
                     {open === "deposit" && (
                         <div>
                             <form onSubmit={handleSubmit} className="w-full max-w-lg">
-                                <div className="my-4">
+                                <div className="my-4 ">
                                     <label className="form-control w-full">
                                         <div className="label">
-                                            <div>Select the Asset</div>
+                                            <div className="">Select the Asset</div>
                                         </div>
                                         <select
                                             className="select select-bordered"
                                             value={asset}
                                             onChange={(e) => setAsset(e.target.value)}
                                         >
-                                            <option value="USC">USC ( Native Chain Token)</option>
+                                            <option value="EDU">EDU ( Native Chain Token)</option>
                                             <option value="NIBS">NIBS (Nimbus Token)</option>
                                             <option value="ETH">ETH (soon)</option>
                                             <option value="USDC">USDC (soon)</option>
@@ -281,7 +281,7 @@ export default function Funding() {
 
                                 <button
                                     type="submit"
-                                    className="bg-black dark:bg-slate-900 text-white text-lg font-bold py-4 px-4 w-full dark:text-black border-blue-700"
+                                    className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700"
                                 >
                                     Deposit
                                 </button>
@@ -303,7 +303,7 @@ export default function Funding() {
                                             value={asset}
                                             onChange={(e) => setAsset(e.target.value)}
                                         >
-                                            <option value="USC">USC ( Native Chain Token)</option>
+                                            <option value="EDU">EDU ( Native Chain Token)</option>
                                             <option value="NIBS">NIBS (Nimbus Token)</option>
                                             <option value="COLLATERAL">wNIBS (Collateral Token)</option>
                                             <option value="ETH">ETH (soon)</option>
@@ -331,7 +331,7 @@ export default function Funding() {
 
                                 <button
                                     type="submit"
-                                    className="bg-black dark:bg-slate-900 text-white text-lg font-bold py-4 px-4 w-full dark:text-black border-blue-700"
+                                    className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700"
                                 >
                                     Borrow
                                 </button>

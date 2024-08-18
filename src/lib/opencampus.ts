@@ -23,3 +23,32 @@ export const opencampus = {
     },
     testnet: true,
 } as const satisfies Chain;
+
+// export function getConfig() {
+//     return createConfig({
+//         chains: [opencampus],
+//         connectors: [
+//             injected(),
+//             // coinbaseWallet(),
+//             // walletConnect({ projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID }),
+//         ],
+//         // storage: createStorage({
+//         //   storage: cookieStorage,
+//         // }),
+//         // ssr: true,
+//         transports: {
+//             [opencampus.id]: http(),
+//         },
+//     });
+// }
+
+
+// declare module "wagmi" {
+//     interface Register {
+//         config: ReturnType<typeof getConfig>;
+//     }
+// }
+
+// to use instead of proivder
+// import { getConfig } from "../opencampus";
+
