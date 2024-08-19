@@ -72,7 +72,7 @@ export default function Navbar() {
 							router.push("/fund");
 						}}
 					>
-						Supply/Borrow
+						Lend/Borrow
 					</div>
 					<div
 						className={style.headerItem}
