@@ -1,6 +1,6 @@
 "use client";
 
-import { Strategy } from "@yieldhive/database";
+import { Strategy } from "../../../database/src/index";
 import { motion, useAnimation, useInView } from "framer-motion";
 import { useRef } from "react";
 

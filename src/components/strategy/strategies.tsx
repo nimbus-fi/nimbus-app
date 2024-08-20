@@ -1,6 +1,6 @@
 "use client";
 
-import { Strategy } from "@yieldhive/database";
+import { Strategy } from "../../../database/src/index";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import StrategyCard from "./card";

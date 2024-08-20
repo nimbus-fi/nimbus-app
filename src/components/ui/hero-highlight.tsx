@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@yieldhive/ui/lib/utils";
+import { cn } from "@/lib/utils";
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 import React from "react";
 

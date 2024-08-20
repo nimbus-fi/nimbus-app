@@ -1,5 +1,5 @@
-import BackgroundDots from "@yieldhive/ui/components/ui/background-dots";
-import StrategyDetail from "../../../components/layout/strategy/detail";
+import BackgroundDots from "@/components/ui/background-dots";
+import StrategyDetail from "@/components/strategy/detail";
 import {
   getAllStrategies,
   getStrategyDetail,
