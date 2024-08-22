@@ -71,7 +71,7 @@ export default function Stake() {
     //     }
     // };
 
-    const lend = async (event: React.FormEvent, asset: string) => {
+    const stake = async (event: React.FormEvent, asset: string) => {
         event.preventDefault();
         if (!isConnected || !provider) {
             toast.error("Please connect your wallet");
@@ -83,33 +83,27 @@ export default function Stake() {
             const contract = new ethers.Contract(STAKING_CONTRACT, StakingABI.abi, provider.getSigner());
             const amountWei = ethers.utils.parseEther(amount);
 
-            let tx;
-            if (asset === "EDU") {
-                // Lend EDU tokens
-                tx = await contract.stake({ value: amountWei, gasLimit: 300000 });
-            } else {
-                // stake Nimbus tokens
-                const tokenContract = new ethers.Contract(
-                    NIMBUS_TOKEN_ADDRESS,
-                    ['function approve(address spender, uint256 amount) returns (bool)'],
-                    provider.getSigner()
-                );
+            let tx = await contract.depositAndStartStake(amountWei, { gasLimit: 9000000 });
 
-                // Approve the contract to spend tokens
-                const approveTx = await tokenContract.approve(contract.address, amountWei);
-                await approveTx.wait();
+            // stake Nimbus tokens
 
-                // Lend Nimbus tokens
-                tx = await contract.lendNimbus(amountWei);
-            }
+            // const tokenContract = new ethers.Contract(
+            //     NIMBUS_TOKEN_ADDRESS,
+            //     ['function approve(address spender, uint256 amount) returns (bool)'],
+            //     provider.getSigner()
+            // );
+            // const approveTx = await tokenContract.approve(contract.address, amountWei);
+            // await approveTx.wait();
 
             await tx.wait();
 
-            toast.success(`${asset} lend successful`);
+            console.log("Transaction confirmed:", tx);
+
+            toast.success(`EDU stake successful`);
             setAmount("");
         } catch (error) {
-            console.error("Error lending:", error);
-            toast.error("Error lending. Please try again.");
+            console.error(error);
+            toast.error("Error staking. Please try again.");
         }
     };
 
@@ -202,7 +196,7 @@ export default function Stake() {
         }
     };
 
-    
+
 
     const repay = async (amount: string) => {
         if (!isConnected || !provider) {
@@ -237,7 +231,7 @@ export default function Stake() {
     };
 
     const handleSubmit = (event: React.FormEvent) => {
-        lend(event, asset);
+        stake(event, asset);
     };
 
 
@@ -310,7 +304,7 @@ export default function Stake() {
                                         </div>
                                         <input
                                             type="text"
-                                            id="lend-value"
+                                            id="stake-value"
                                             value={amount}
                                             onChange={priceHandler}
                                             className="input input-lg input-bordered"

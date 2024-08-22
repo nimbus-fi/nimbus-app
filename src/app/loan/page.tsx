@@ -2,12 +2,12 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
 import { useAccount } from 'wagmi';
 import { ethers } from 'ethers';
-import { NIMBUS_TOKEN_ADDRESS, NIMBUS_FINANCE } from '@/lib/contract';
+import { NIMBUS_TOKEN_ADDRESS, NIMBUS_FINANCE, USDC_EDUCHAIN, } from '@/lib/contract';
 import COMMUNITY_UNION from '@/lib/abi/CommunityUnion.json';
 import LENDING_POOL from '@/lib/abi/LendingPool.json';
 import NIMBUS_FINANCE_JSON from '@/lib/abi/NimbusFinance.json';
 import ERC20 from '@/lib/abi/ERC20abi.json';
-import { getCommunityUnionContract, getNimbusFinanceContract } from '@/lib/contract';
+import { getCommunityUnionContract, getLoanProtocolContract } from '@/lib/contract';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import AssetsTable from "@/components/assets";
@@ -61,7 +61,7 @@ export default function Funding() {
         }
 
         try {
-            const contract = getNimbusFinanceContract(provider);
+            const contract = getLoanProtocolContract(provider);
             const amountWei = ethers.utils.parseEther(amount);
 
             let tx;
@@ -70,23 +70,42 @@ export default function Funding() {
                 tx = await contract.depositEther({ value: amountWei });
             } else {
                 // Lend Nimbus tokens
-                const tokenContract = new ethers.Contract(
-                    NIMBUS_TOKEN_ADDRESS,
-                    ['function approve(address spender, uint256 amount) returns (bool)'],
-                    provider.getSigner()
-                );
+                if (asset === "NIBS") {
+                    const tokenContract = new ethers.Contract(
+                        NIMBUS_TOKEN_ADDRESS,
+                        ['function approve(address spender, uint256 amount) returns (bool)'],
+                        provider.getSigner()
+                    );
+                    // Approve the contract to spend tokens
+                    const approveTx = await tokenContract.approve(contract.address, amountWei);
+                    await approveTx.wait();
 
-                // Approve the contract to spend tokens
-                const approveTx = await tokenContract.approve(contract.address, amountWei);
-                await approveTx.wait();
+                    // Lend Nimbus tokens
+                    tx = await contract.depositNibs(NIMBUS_TOKEN_ADDRESS, amountWei);
+                }
+                else {
+                    const tokenContract = new ethers.Contract(
+                        USDC_EDUCHAIN,
+                        ['function approve(address spender, uint256 amount) returns (bool)'],
+                        provider.getSigner()
+                    );
+                    // Approve the contract to spend tokens
+                    const approveTx = await tokenContract.approve(contract.address, amountWei);
+                    await approveTx.wait();
 
-                // Lend Nimbus tokens
-                tx = await contract.lendNimbus(amountWei);
+                    // Lend Nimbus tokens
+                    tx = await contract.depositUsdc(USDC_EDUCHAIN, amountWei);
+                }
             }
 
             await tx.wait();
 
-            toast.success(`${asset} lend successful`);
+            toast.success(`${amount} ${asset} lend successful`);
+            toast(
+                <div>
+                    Link - {`https://opencampus-codex.blockscout.com/tx/${tx.hash}`}
+                </div>
+            );
             setAmount("");
         } catch (error) {
             console.error("Error lending:", error);
@@ -104,16 +123,47 @@ export default function Funding() {
         }
 
         try {
-            const contract = getNimbusFinanceContract(provider);
+            const contract = getLoanProtocolContract(provider);
             const amountWei = ethers.utils.parseEther(amount);
 
-            // Borrow Nimbus tokens
-            const borrowTx = await contract.borrow(amountWei);
-            toast.info("Borrowing in progress...");
+            let tx;
+            if (asset === "EDU") {
+                tx = await contract.borrowEther({ value: amountWei });
+            } else {
+                if (asset === "NIBS") {
+                    const tokenContract = new ethers.Contract(
+                        NIMBUS_TOKEN_ADDRESS,
+                        ['function approve(address spender, uint256 amount) returns (bool)'],
+                        provider.getSigner()
+                    );
+                    // Approve the contract to spend tokens
+                    const approveTx = await tokenContract.approve(contract.address, amountWei);
+                    await approveTx.wait();
 
-            await borrowTx.wait();
+                    // Lend Nimbus tokens
+                    tx = await contract.borrowNibs(amountWei);
+                }
+                else {
+                    const tokenContract = new ethers.Contract(
+                        USDC_EDUCHAIN,
+                        ['function approve(address spender, uint256 amount) returns (bool)'],
+                        provider.getSigner()
+                    );
+                    // Approve the contract to spend tokens
+                    const approveTx = await tokenContract.approve(contract.address, amountWei);
+                    await approveTx.wait();
 
-            toast.success("Borrow successful");
+                    // Lend Nimbus tokens
+                    tx = await contract.borrowUsdc(amountWei);
+                }
+            }
+
+            toast.success(`${amount} ${asset} borrow successful`);
+            toast(
+                <div>
+                    Link - {`https://opencampus-codex.blockscout.com/tx/${tx.hash}`}
+                </div>
+            );
             setAmount("");
         } catch (error) {
             console.error("Error borrowing:", error);
@@ -128,7 +178,7 @@ export default function Funding() {
         }
 
         try {
-            const contract = getNimbusFinanceContract(provider);
+            const contract = getLoanProtocolContract(provider);
             const [etherBalance, nimbusBalance, borrowedAmount] = await contract.getUserInfo(address);
 
             return {
@@ -142,24 +192,58 @@ export default function Funding() {
         }
     };
 
+    const withdraw = async (event: React.FormEvent, asset: string) => {
+        event.preventDefault();
 
-    const withdraw = async (amount: string,) => {
         if (!isConnected || !provider) {
             toast.error("Please connect your wallet");
             return;
         }
-
         try {
-            const contract = getNimbusFinanceContract(provider);
+            const contract = getLoanProtocolContract(provider);
             const amountWei = ethers.utils.parseEther(amount);
 
-            const withdrawTx = await contract.withdraw(amountWei);
-            toast.info("Withdrawal in progress...");
+            let tx;
+            if (asset === "EDU") {
+                tx = await contract.borrowEther({ value: amountWei });
+            } else {
+                if (asset === "NIBS") {
+                    const tokenContract = new ethers.Contract(
+                        NIMBUS_TOKEN_ADDRESS,
+                        ['function approve(address spender, uint256 amount) returns (bool)'],
+                        provider.getSigner()
+                    );
+                    // Approve the contract to spend tokens
+                    const approveTx = await tokenContract.approve(contract.address, amountWei);
+                    await approveTx.wait();
 
-            await withdrawTx.wait();
+                    // Lend Nimbus tokens
+                    tx = await contract.borrowNibs(amountWei);
+                }
+                else {
+                    const tokenContract = new ethers.Contract(
+                        USDC_EDUCHAIN,
+                        ['function approve(address spender, uint256 amount) returns (bool)'],
+                        provider.getSigner()
+                    );
+                    // Approve the contract to spend tokens
+                    const approveTx = await tokenContract.approve(contract.address, amountWei);
+                    await approveTx.wait();
 
-            toast.success(`${asset} withdrawal successful`);
-        } catch (error) {
+                    // Lend Nimbus tokens
+                    tx = await contract.borrowUsdc(amountWei);
+                }
+            }
+
+            toast.success(`${amount} ${asset} withdraw successful`);
+            toast(
+                <div>
+                    Link - {`https://opencampus-codex.blockscout.com/tx/${tx.hash}`}
+                </div>
+            );
+            setAmount("");
+        }
+        catch (error) {
             console.error("Error withdrawing:", error);
             toast.error("Error withdrawing. Please try again.");
         }
@@ -172,7 +256,7 @@ export default function Funding() {
         }
 
         try {
-            const contract = getNimbusFinanceContract(provider);
+            const contract = getLoanProtocolContract(provider);
             const amountWei = ethers.utils.parseEther(amount);
 
             // Approve Nimbus tokens first
@@ -201,6 +285,9 @@ export default function Funding() {
         lend(event, asset);
     };
 
+    const handleWithdraw = (event: React.FormEvent) => {
+        withdraw(event, asset);
+    }
 
     return (
         <main className="justify-between py-5 ">
@@ -234,6 +321,17 @@ export default function Funding() {
                         </div>
                         <div className="divider divider-neutral mt-0"></div>
 
+                        <div
+                            className={`w-1/2 py-4 px-1 md:px-4 text-sm font-semibold md:text-base lg:px-12 hover:underline-offset-8
+                            rounded-2xl text-center transition-all delay-75 text-black focus:ring focus:ring-blue-400 cursor-pointer 
+                                ${open === "withdraw"
+                                    ? " bg-white drop-shadow-2xl text-black font-semibold"
+                                    : " "
+                                }`}
+                        >
+                            <button onClick={() => handleTabOpen("withdraw")}>Withdraw</button>
+                        </div>
+
                         {/* Lend option */}
                         {open === "lend" && (
                             <div>
@@ -250,8 +348,8 @@ export default function Funding() {
                                             >
                                                 <option value="EDU">EDU ( Native Chain Token)</option>
                                                 <option value="NIBS">NIBS (Nimbus Token)</option>
-                                                <option value="ETH">ETH (soon)</option>
-                                                <option value="USDC">USDC (soon)</option>
+                                                <option value="USDC">USDC</option>
+                                                <option value="ETH">ETH (coming soon)</option>
                                             </select>
                                         </label>
                                     </div>
@@ -286,6 +384,53 @@ export default function Funding() {
                                         className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700"
                                     >
                                         Lend
+                                    </button>
+                                </form>
+                            </div>
+                        )}
+
+                        {open === "withdraw" && (
+                            <div>
+                                <form onSubmit={handleSubmit} className="w-full max-w-lg">
+                                    <div className="my-4 ">
+                                        <label className="form-control w-full">
+                                            <div className="label">
+                                                <div className="">Select the Asset</div>
+                                            </div>
+                                            <select
+                                                className="select select-bordered"
+                                                value={asset}
+                                                onChange={(e) => setAsset(e.target.value)}
+                                            >
+                                                <option value="EDU">EDU ( Native Chain Token)</option>
+                                                <option value="NIBS">NIBS (Nimbus Token)</option>
+                                                <option value="USDC">USDC</option>
+                                                <option value="ETH">ETH (coming soon)</option>
+                                            </select>
+                                        </label>
+                                    </div>
+
+                                    <div className="my-6">
+                                        <label className="form-control w-full">
+                                            <div className="label">
+                                                <div className="my-2">Enter Amount</div>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="lend-value"
+                                                value={amount}
+                                                onChange={priceHandler}
+                                                className="input input-lg input-bordered"
+                                                placeholder="0"
+                                                required
+                                            />
+                                        </label>
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        className="bg-black text-white text-lg font-bold py-4 px-4 w-full border-blue-700"
+                                    >
+                                        Withdraw
                                     </button>
                                 </form>
                             </div>
