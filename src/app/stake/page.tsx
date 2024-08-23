@@ -2,11 +2,13 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
 import { useAccount } from 'wagmi';
 import { ethers } from 'ethers';
-import { NIMBUS_TOKEN_ADDRESS, COLLATERAL_MANAGER_ADDRESS, COLLATERAL_TOKEN_ADDRESS, NIMBUS_FINANCE } from '@/lib/contract';
+import { NIMBUS_TOKEN_ADDRESS, STAKED_EDU_ADDRESS, STAKING_CONTRACT } from '@/lib/contract';
 import COMMUNITY_UNION from '@/lib/abi/CommunityUnion.json';
 import LENDING_POOL from '@/lib/abi/LendingPool.json';
 import NIMBUS_FINANCE_JSON from '@/lib/abi/NimbusFinance.json';
-import ERC20 from '@/lib/abi/MyToken.json';
+import ERC20 from '@/lib/abi/ERC20abi.json';
+import NimbusTokenABI from '@/lib/abi/NimbusToken.json';
+import StakedEDUABI from '@/lib/abi/StakedEDU.json';
 import { getCommunityUnionContract, getNimbusFinanceContract } from '@/lib/contract';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -54,19 +56,19 @@ export default function Stake() {
         setTermsAccepted(event.target.checked);
     };
 
-    const getTokenAddress = (asset: string) => {
-        switch (asset) {
-            case "NIBS":
-                setIsNimbusToken(true);
-                return NIMBUS_TOKEN_ADDRESS;
-            case "COLLATERAL":
-                setIsNimbusToken(false);
-                return COLLATERAL_TOKEN_ADDRESS;
-            // Add other token addresses as needed
-            default:
-                return NIMBUS_TOKEN_ADDRESS;
-        }
-    };
+    // const getTokenAddress = (asset: string) => {
+    //     switch (asset) {
+    //         case "NIBS":
+    //             setIsNimbusToken(true);
+    //             return NIMBUS_TOKEN_ADDRESS;
+    //         case "COLLATERAL":
+    //             setIsNimbusToken(false);
+    //             return COLLATERAL_TOKEN_ADDRESS;
+    //         // Add other token addresses as needed
+    //         default:
+    //             return NIMBUS_TOKEN_ADDRESS;
+    //     }
+    // };
 
     const lend = async (event: React.FormEvent, asset: string) => {
         event.preventDefault();
