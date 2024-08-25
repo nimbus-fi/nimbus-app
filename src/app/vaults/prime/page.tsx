@@ -1,14 +1,81 @@
 import React from 'react';
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
+interface DataRow {
+    action: string;
+    protocol: string;
+    chain: string;
+    amount: string;
+    yield: string;
+}
+
+const data: DataRow[] = [
+    {
+        action: "Supply USDC to Aave",
+        protocol: "USDC on Aave",
+        chain: "Base",
+        amount: "$100",
+        yield: "5.14%",
+    },
+    {
+        action: "Borrow cbETH from Aave",
+        protocol: "cbETH on Aave",
+        chain: "Base",
+        amount: "~$70",
+        yield: "-2.72%",
+    },
+    {
+        action: "Swap half cbETH for USDC on Uniswap",
+        protocol: "Uniswap",
+        chain: "Base",
+        amount: "~$35",
+        yield: "0.00%",
+    },
+    {
+        action: "Swap half cbETH for USDC on Uniswap",
+        protocol: "Uniswap",
+        chain: "Base",
+        amount: "~$35",
+        yield: "0.00%",
+    },
+    {
+        action: "Swap half cbETH for AERO on Uniswap",
+        protocol: "Uniswap",
+        chain: "Base",
+        amount: "~$35",
+        yield: "0.00%",
+    },
+    {
+        action: "Swap half cbETH for AERO on Uniswap",
+        protocol: "Uniswap",
+        chain: "Base",
+        amount: "~$35",
+        yield: "0.00%",
+    },
+    {
+        action: "Deposit USDC and AERO to Aerodrome Pool",
+        protocol: "Aerodrome",
+        chain: "Base",
+        amount: "~$35",
+        yield: "78.32%",
+    },
+    {
+        action: "Deposit USDC and AERO to Aerodrome Pool",
+        protocol: "Aerodrome",
+        chain: "Base",
+        amount: "~$35",
+        yield: "78.32%",
+    },
+];
+
 export default function DeFiDashboard() {
     return (
-        <div className="container mx-auto p-4 bg-gray-100">
+        <div className="container mx-auto p-6 bg-gray-100 my-5 rounded-xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Left Column */}
                 <div className="space-y-4">
                     {/* How does it work? */}
-                    <div className="bg-purple-500 text-white p-4 rounded-lg">
+                    <div className="bg-yellow-300 text-black p-4 rounded-lg">
                         <h2 className="text-xl font-bold mb-2">How does it work?</h2>
                         <p className="text-sm">
                             Deposit USDC into 'Prime USDC' for optimized yield across multiple
@@ -28,30 +95,26 @@ export default function DeFiDashboard() {
                     <div className="bg-white p-4 rounded-lg shadow">
                         <h2 className="text-xl font-bold mb-2">Behind the scenes</h2>
                         <p className="text-sm mb-2">Actions done automatically by the strategy (smart-contract) with an investment of $1000</p>
-                        <table className="w-full text-sm">
+                        <table className="min-w-full bg-white border border-gray-300">
                             <thead>
-                                <tr className="bg-gray-200">
-                                    <th className="p-2 text-left">Action</th>
-                                    <th className="p-2 text-left">Protocol</th>
-                                    <th className="p-2 text-left">Chain Amount</th>
-                                    <th className="p-2 text-left">Yield</th>
+                                <tr className="bg-gray-100 text-left">
+                                    <th className="py-2 px-4 border-b">Action</th>
+                                    <th className="py-2 px-4 border-b">Protocol</th>
+                                    <th className="py-2 px-4 border-b">Chain</th>
+                                    <th className="py-2 px-4 border-b">Amount</th>
+                                    <th className="py-2 px-4 border-b">Yield</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* Add table rows here based on the image data */}
-                                {/* Example row: */}
-                                <tr>
-                                    <td className="p-2">1. Supply USDC to Aave</td>
-                                    <td className="p-2 flex items-center">
-                                        <img src="/api/placeholder/20/20" alt="USDC" className="mr-1" />
-                                        USDC on
-                                        <img src="/api/placeholder/20/20" alt="Aave" className="mx-1" />
-                                        Aave
-                                    </td>
-                                    <td className="p-2">Base $100</td>
-                                    <td className="p-2">5.14%</td>
-                                </tr>
-                                {/* Add more rows as needed */}
+                                {data.map((row, index) => (
+                                    <tr key={index} className='text-xs'>
+                                        <td className="py-2 px-4 border-b">{row.action}</td>
+                                        <td className="py-2 px-4 border-b">{row.protocol}</td>
+                                        <td className="py-2 px-4 border-b">{row.chain}</td>
+                                        <td className="py-2 px-4 border-b">{row.amount}</td>
+                                        <td className="py-2 px-4 border-b">{row.yield}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
@@ -62,11 +125,11 @@ export default function DeFiDashboard() {
                     {/* APY */}
                     <div className="bg-white p-4 rounded-lg shadow">
                         <div className="flex justify-between items-center">
-                            <span className="text-xl font-bold">APY</span>
-                            <span className="text-3xl font-bold text-purple-600">58.06%</span>
+                            <span className="text-xl font-bold">APY (Mainnet)</span>
+                            <span className="text-3xl font-bold text-yellow-500">58.06%</span>
                         </div>
                         <div className="mt-4 space-x-2">
-                            <button className="bg-purple-600 text-white px-4 py-2 rounded">Deposit</button>
+                            <button className="bg-yellow-400 text-black px-4 py-2 rounded">Deposit</button>
                             <button className="bg-gray-300 text-gray-700 px-4 py-2 rounded">Withdraw</button>
                         </div>
                         <div className="mt-4">
@@ -75,7 +138,7 @@ export default function DeFiDashboard() {
                         </div>
                         <div className="mt-4 flex items-center">
                             <input type="text" placeholder="0" className="border p-2 rounded w-full" />
-                            <button className="ml-2 bg-purple-600 text-white px-4 py-2 rounded">Deposit</button>
+                            <button className="ml-2 bg-yellow-400 text-black px-4 py-2 rounded">Deposit</button>
                         </div>
                         <p className="text-sm text-gray-500 mt-2">No additional fees</p>
                     </div>
