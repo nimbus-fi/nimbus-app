@@ -21,7 +21,7 @@ const StrategyHeading = () => {
         }}
         className="font-bold text-[22px] sm:text-3xl md:text-4xl lg:text-5xl text-center !leading-tight"
       >
-        Yield Strategies
+        Yield Vaults
       </motion.h1>
       <motion.div
         initial={{
