@@ -1,7 +1,7 @@
 "use client";
 
 import { Strategy } from "@yieldhive/database";
-import { Card } from "@yieldhive/ui/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@yieldhive/ui/components/ui/table";
+} from "@/components/ui/table";
 import { motion } from "framer-motion";
 
 interface Props {

@@ -1,7 +1,7 @@
 "use client";
 
 import { Strategy } from "@yieldhive/database";
-import { Card } from "@yieldhive/ui/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 
 interface Props {
