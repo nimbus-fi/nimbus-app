@@ -125,7 +125,7 @@ export default function DeFiDashboard() {
                     {/* APY */}
                     <div className="bg-white p-4 rounded-lg shadow">
                         <div className="flex justify-between items-center">
-                            <span className="text-xl font-bold">APY (Mainnet)</span>
+                            <span className="text-xl font-bold">APY (on Mainnet)</span>
                             <span className="text-3xl font-bold text-yellow-500">58.06%</span>
                         </div>
                         <div className="mt-4 space-x-2">

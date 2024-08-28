@@ -2,10 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi'
 import { ethers } from 'ethers';
-import { GOVERNANCE_ADDRESS } from '@/lib/contract';
+import { GOVERNANCE_ADDRESS, COMMUNITY_UNION_ADDRESS } from '@/lib/contract';
 import GovernanceABI from '@/lib/abi/Governance.json';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import CommunityUnionABI from '@/lib/abi/CommunityUnion.json';
 
 interface Proposal {
     id: number;
@@ -72,6 +73,37 @@ const Governance: React.FC = () => {
             toast.error("Failed to fetch proposals");
         }
     };
+
+    const joinCommunity = async () => {
+        setLoading(true);
+        try {
+            console.log("Joining Community");
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const contract = new ethers.Contract(COMMUNITY_UNION_ADDRESS, CommunityUnionABI.abi, provider.getSigner());
+            const tx = await contract.joinUnion();
+            console.log("Transaction sent:", tx.hash);
+            const receipt = await tx.wait();
+            console.log("Transaction confirmed:", receipt);
+            toast.success("Joined Community Union Successfully!");
+
+            toast(
+                <div>
+                    Link - {`https://opencampus-codex.blockscout.com/tx/${tx.hash}`}
+                </div>
+            );
+        } catch (error) {
+            console.error("Error joining community:", error);
+            toast.error("Failed to join community!");
+
+            toast(
+                <div>
+                    {(error as any)?.reason || "Unknown error occurred"}
+                </div>
+            );
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const createProposal = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -189,6 +221,16 @@ const Governance: React.FC = () => {
     return (
         <div className="container mx-auto px-32 py-16">
             <h1 className="text-3xl font-bold mb-6">Governance</h1>
+
+            <div className='flex py-5'>
+                <h2 className="text-2xl font-semibold pr-5">Join Goverance Community</h2>
+                <button
+                    onClick={joinCommunity}
+                    className="bg-black text-white text font-bold px-4 py-2 rounded-3xl "
+                >
+                    Join
+                </button>
+            </div>
 
             <form onSubmit={createProposal} className="mb-8 ">
                 <input

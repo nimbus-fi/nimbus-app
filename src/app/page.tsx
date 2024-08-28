@@ -12,7 +12,30 @@ export default function Home() {
           <div className="mb-5 text-5xl font-serif font-bold">Hey 👋, Welcome To Nimbus Fi
           </div>
           <div className="mb-5 text-xl">
-            A decentralized platform enabling users to stake, lend, borrow and invest into yeild vaults on <b>EDU Chain</b>.
+            A DeFi enabling people to liquid stake, lend/borrow and invest into yeild vaults on <b>EDU Chain</b>.
+          </div>
+          <div className='py-5'>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white p-6 rounded-xl shadow-xl ">
+                <Link
+                  href="/loan?state=lend">
+                  <div className="bg-white p-6 rounded-xl ">
+                    <h2 className="text-2xl font-semibold mb-4">For Stakers</h2>
+                    <p>Just liquid stake your EDU tokens and get onchain yields and platform rewards.</p>
+                  </div>
+                </Link>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-xl ">
+                <Link
+                  href="/loan?state=borrow">
+                  <div className="bg-white p-6 rounded-xl ">
+                    <h2 className="text-2xl font-semibold mb-4">For Yielders</h2>
+                    <p>Simple, Easy, Effective - Yield vaults of USDC which gives you upto <b>60% APY</b></p>
+                  </div>
+                </Link>
+              </div>
+            </div>
+
           </div>
           <div className='py-5'>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

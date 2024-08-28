@@ -10,7 +10,7 @@ export const arbitrumChain = {
     name: "Arbitrum",
     network: "Mainnet",
     pyth_contract_address: "0xe632d545cbd3a26733f5e90a367660883ebaa09d",
-    pyth_contract_abi_url: "https://hackathons.youprotab.com/hackathons/superhack-2024/contracts/optimism-pyth.json",
+    pyth_contract_abi_url: "https://hackathons.youprotab.com/hackathons/superhack-2024/contracts/arbitrum-pyth.json",
 };
 
 // Aave Protocol Data

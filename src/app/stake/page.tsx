@@ -86,7 +86,7 @@ export default function Stake() {
             let tx;
             if (asset === "EDU") {
                 // Lend EDU tokens
-                tx = await contract.depositEther({ value: amountWei });
+                tx = await contract.stake({ value: amountWei, gasLimit: 300000 });
             } else {
                 // stake Nimbus tokens
                 const tokenContract = new ethers.Contract(
