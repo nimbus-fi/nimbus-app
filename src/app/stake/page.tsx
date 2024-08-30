@@ -11,6 +11,7 @@ import { getCommunityUnionContract, getNimbusFinanceContract } from '@/lib/contr
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
+
 export default function Stake() {
     const { address, isConnected } = useAccount();
     const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
