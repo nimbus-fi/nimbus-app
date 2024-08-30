@@ -78,7 +78,7 @@ export default function DeFiDashboard() {
                     <div className="bg-yellow-300 text-black p-4 rounded-lg">
                         <h2 className="text-xl font-bold mb-2">How does it work?</h2>
                         <p className="text-sm">
-                            Deposit USDC into 'Prime USDC' for optimized yield across multiple
+                            Deposit USDC into <b>Prime USDC</b> for optimized yield across multiple
                             DeFi protocols. This smart contract leverages Aave for lending and
                             borrowing, Aerodrome for liquidity provision, and Uniswap for swaps,
                             using Pyth Network for price feeds. It supplies USDC to Aave, borrows
@@ -157,7 +157,7 @@ export default function DeFiDashboard() {
                     <div className="bg-white p-4 rounded-lg shadow">
                         <h2 className="text-xl font-bold mb-2">Transaction History</h2>
                         <p className="text-sm">
-                            No transactions recorded since this feature was added. We use your browser's storage to save your transaction history. Make a deposit or withdrawal to see your transactions here. Clearning browser cache will remove this data.
+                            No transactions recorded since this feature was added. We use your browser storage to save your transaction history. Make a deposit or withdrawal to see your transactions here. Clearning browser cache will remove this data.
                         </p>
                     </div>
                 </div>

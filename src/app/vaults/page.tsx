@@ -1,6 +1,5 @@
 import BackgroundDots from "@/components/ui/background-dots";
 import StrategyHeading from "@/components/strategy/heading";
-import Strategies from "@/components/strategy/strategies";
 // import { getAllStrategies } from "../../utils/api/strategy";
 import DeFiStrategies from "@/components/StrategyCard";
 

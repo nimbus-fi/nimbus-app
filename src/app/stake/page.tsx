@@ -113,21 +113,21 @@ export default function Stake() {
         }
     };
 
-    async function stakeEDU(amountInWei) {
-    try {
-        const contract = await getContract();
+    // async function stakeEDU(amountInWei) {
+    //     try {
+    //         const contract = await getContract();
 
-        const tx = await contract.stake({
-            value: amountInWei // amount to stake, in wei
-        });
+    //         const tx = await contract.stake({
+    //             value: amountInWei // amount to stake, in wei
+    //         });
 
-        console.log('Transaction submitted, waiting for confirmation...');
-        await tx.wait();
-        console.log('Transaction confirmed:', tx);
-    } catch (error) {
-        console.error('Error staking EDU:', error);
-    }
-}
+    //         console.log('Transaction submitted, waiting for confirmation...');
+    //         await tx.wait();
+    //         console.log('Transaction confirmed:', tx);
+    //     } catch (error) {
+    //         console.error('Error staking EDU:', error);
+    //     }
+    // }
 
 
     const borrow = async (event: React.FormEvent) => {
@@ -178,7 +178,9 @@ export default function Stake() {
     };
 
 
-    const withdraw = async (amount: string,) => {
+    const withdraw = async () => {
+        // event.preventDefault(); // Prevent the default form submission
+
         if (!isConnected || !provider) {
             toast.error("Please connect your wallet");
             return;
@@ -199,6 +201,8 @@ export default function Stake() {
             toast.error("Error withdrawing. Please try again.");
         }
     };
+
+    
 
     const repay = async (amount: string) => {
         if (!isConnected || !provider) {
