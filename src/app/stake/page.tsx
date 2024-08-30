@@ -9,6 +9,7 @@ import NIMBUS_FINANCE_JSON from '@/lib/abi/NimbusFinance.json';
 import ERC20 from '@/lib/abi/ERC20abi.json';
 import NimbusTokenABI from '@/lib/abi/NimbusToken.json';
 import StakedEDUABI from '@/lib/abi/StakedEDU.json';
+import StakingABI from '@/lib/abi/Staking.json';
 import { getCommunityUnionContract, getNimbusFinanceContract } from '@/lib/contract';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -78,7 +79,8 @@ export default function Stake() {
         }
 
         try {
-            const contract = getNimbusFinanceContract(provider);
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const contract = new ethers.Contract(STAKING_CONTRACT, StakingABI.abi, provider.getSigner());
             const amountWei = ethers.utils.parseEther(amount);
 
             let tx;
@@ -86,7 +88,7 @@ export default function Stake() {
                 // Lend EDU tokens
                 tx = await contract.depositEther({ value: amountWei });
             } else {
-                // Lend Nimbus tokens
+                // stake Nimbus tokens
                 const tokenContract = new ethers.Contract(
                     NIMBUS_TOKEN_ADDRESS,
                     ['function approve(address spender, uint256 amount) returns (bool)'],
@@ -110,6 +112,22 @@ export default function Stake() {
             toast.error("Error lending. Please try again.");
         }
     };
+
+    async function stakeEDU(amountInWei) {
+    try {
+        const contract = await getContract();
+
+        const tx = await contract.stake({
+            value: amountInWei // amount to stake, in wei
+        });
+
+        console.log('Transaction submitted, waiting for confirmation...');
+        await tx.wait();
+        console.log('Transaction confirmed:', tx);
+    } catch (error) {
+        console.error('Error staking EDU:', error);
+    }
+}
 
 
     const borrow = async (event: React.FormEvent) => {

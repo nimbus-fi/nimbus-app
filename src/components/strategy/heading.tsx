@@ -40,7 +40,7 @@ const StrategyHeading = () => {
         className="text-center mt-4 sm:text-lg md:text-xl lg:text-[22px] md:max-w-prose mx-auto font-medium"
       >
         Strategies are{" "}
-        <Highlight className="from-accent/55 to-accent/40">
+        <Highlight className="from-accent/75 to-accent/40">
           a combination of investment steps
         </Highlight>{" "}
         that combine various pools and risk combinations to maximize yield.
